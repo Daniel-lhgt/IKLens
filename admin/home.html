@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#050714" />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/png" href="../images/IKLens - AI Image prompting platform.png" />
+  <title>Admin — IKLens</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+
+  <style>
+    :root {
+      --bg: #050714;
+      --surface: #0f1223;
+      --card: #151a30;
+      --card-hover: #1b2140;
+      --border: rgba(124, 138, 255, 0.14);
+      --border-strong: rgba(124, 138, 255, 0.3);
+      --text: #eef0ff;
+      --text-secondary: #b0b8e6;
+      --text-muted: #6b72b0;
+      --accent: #8a2be2;
+      --accent-bright: #a5aeff;
+      --cyan: #00d2ff;
+      --success: #34d399;
+      --error: #f87171;
+      --warning: #fbbf24;
+      --radius: 12px;
+      --radius-lg: 18px;
+      --radius-pill: 9999px;
+      --gradient: linear-gradient(135deg, #8a2be2 0%, #00d2ff 100%);
+      --gradient-hover: linear-gradient(135deg, #9d4beb 0%, #33dfff 100%);
+      --glow: 0 0 25px rgba(138, 43, 226, 0.35);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* TOP BAR */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(5, 7, 20, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      object-fit: contain;
+      background: var(--surface);
+      padding: 4px;
+      border: 1px solid var(--border);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.15;
+    }
+
+    .brand-title {
+      font-size: 1rem;
+      font-weight: 800;
+    }
+
+    .brand-sub {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-ghost {
+      padding: 9px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--border-strong);
+      color: var(--text);
+    }
+
+    /* TABS */
+    .tabs {
+      display: flex;
+      gap: 6px;
+      padding: 14px 20px 0;
+      max-width: 1280px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .tab {
+      padding: 10px 18px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      border-radius: 10px 10px 0 0;
+      border-bottom: 2px solid transparent;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+
+    .tab:hover { color: var(--text); }
+
+    .tab.active {
+      color: var(--accent-bright);
+      border-bottom-color: var(--accent);
+    }
+
+    /* MAIN */
+    .main {
+      flex: 1;
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fadeIn 0.25s ease-out; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* SECTION HEADER */
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .section-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+    }
+
+    .section-count {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-left: 10px;
+    }
+
+    /* BUTTON */
+    .btn-primary {
+      padding: 12px 22px;
+      border: none;
+      border-radius: var(--radius-pill);
+      background: var(--gradient);
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: var(--glow);
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-1px);
+      background: var(--gradient-hover);
+      box-shadow: 0 12px 30px rgba(138, 43, 226, 0.5);
+    }
+
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* TEMPLATE GRID */
+    .template-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .tpl-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: border-color 0.2s, transform 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tpl-card:hover {
+      border-color: var(--border-strong);
+      transform: translateY(-2px);
+    }
+
+    .tpl-image-wrap {
+      aspect-ratio: 3 / 4;
+      background: var(--surface);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .tpl-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .tpl-image-fallback {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 2rem;
+    }
+
+    .tpl-category {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 4px 10px;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(6px);
+      border-radius: var(--radius-pill);
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #fff;
+      text-transform: capitalize;
+      z-index: 2;
+    }
+
+    .tpl-meta {
+      padding: 12px 14px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .tpl-name {
+      font-size: 0.92rem;
+      font-weight: 700;
+      line-height: 1.3;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    .tpl-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-sm {
+      flex: 1;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .btn-sm:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--border-strong);
+      color: var(--text);
+    }
+
+    .btn-sm.danger:hover {
+      background: rgba(248, 113, 113, 0.1);
+      border-color: rgba(248, 113, 113, 0.4);
+      color: var(--error);
+    }
+
+    /* EMPTY */
+    .empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+
+    .empty-icon { font-size: 2.5rem; opacity: 0.6; margin-bottom: 12px; }
+    .empty-title { font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .empty-text { font-size: 0.88rem; }
+
+    /* LOADING */
+    .loading-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 40px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(138, 43, 226, 0.2);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* MODAL */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal {
+      width: 100%;
+      max-width: 560px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 26px 24px 24px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+      margin: auto 0;
+      animation: modalIn 0.25s ease-out;
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      gap: 12px;
+    }
+
+    .modal-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .modal-close {
+      width: 34px;
+      height: 34px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      cursor: pointer;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+    }
+
+    .modal-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .form-label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      padding: 12px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-size: 0.92rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      border-color: var(--border-strong);
+      box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.15);
+    }
+
+    .form-textarea {
+      min-height: 140px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .form-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b72b0' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .form-select option { background: var(--surface); color: var(--text); }
+
+    /* IMAGE UPLOAD */
+    .upload-box {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px;
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .upload-preview {
+      width: 72px;
+      height: 90px;
+      border-radius: 8px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .upload-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .upload-preview-placeholder {
+      color: var(--text-muted);
+      font-size: 1.4rem;
+    }
+
+    .upload-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .upload-btn {
+      padding: 9px 16px;
+      border-radius: 8px;
+      background: rgba(138, 43, 226, 0.15);
+      border: 1px solid rgba(138, 43, 226, 0.4);
+      color: var(--accent-bright);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+
+    .upload-btn:hover { background: rgba(138, 43, 226, 0.25); }
+
+    .upload-hint {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .upload-progress {
+      height: 4px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+
+    .upload-progress-bar {
+      height: 100%;
+      background: var(--gradient);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* FORM ACTIONS */
+    .form-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 6px;
+    }
+
+    .btn-cancel {
+      padding: 11px 20px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s;
+    }
+
+    .btn-cancel:hover { background: rgba(255, 255, 255, 0.05); }
+
+    /* FEEDBACK LIST */
+    .feedback-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .fb-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .fb-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .fb-from {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .fb-name { font-size: 0.92rem; font-weight: 700; }
+    .fb-email { font-size: 0.75rem; color: var(--text-muted); overflow-wrap: anywhere; }
+
+    .fb-type {
+      font-size: 0.68rem;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(138, 43, 226, 0.15);
+      color: var(--accent-bright);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+
+    .fb-message {
+      font-size: 0.88rem;
+      line-height: 1.55;
+      color: var(--text-secondary);
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .fb-date {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--card);
+      border: 1px solid var(--border-strong);
+      padding: 12px 22px;
+      border-radius: var(--radius-pill);
+      color: var(--text);
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s, transform 0.25s;
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      max-width: calc(100vw - 40px);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast.success { border-color: rgba(52, 211, 153, 0.5); color: var(--success); }
+    .toast.error { border-color: rgba(248, 113, 113, 0.5); color: var(--error); }
+
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      .topbar { padding: 12px 14px; }
+      .tabs { padding: 12px 14px 0; }
+      .main { padding: 14px; }
+      .brand-title { font-size: 0.92rem; }
+      .brand-sub { display: none; }
+      .btn-ghost { padding: 8px 12px; font-size: 0.78rem; }
+      .template-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .modal { padding: 20px 16px; }
+      .section-title { font-size: 1.15rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="brand">
+      <img
+        src="../images/IKLens - AI Image prompting platform.png"
+        alt="IKLens"
+        class="brand-logo"
+      />
+      <div class="brand-text">
+        <span class="brand-title">IKLens Admin</span>
+        <span class="brand-sub">Content Manager</span>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn-ghost" id="signOutBtn">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <span>Sign Out</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- TABS -->
+  <nav class="tabs">
+    <button class="tab active" data-tab="templates">Templates</button>
+    <button class="tab" data-tab="feedback">Feedback</button>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- TEMPLATES TAB -->
+    <section class="tab-panel active" id="panel-templates">
+      <div class="section-head">
+        <h2 class="section-title">
+          Templates
+          <span class="section-count" id="templateCount">—</span>
+        </h2>
+        <button class="btn-primary" id="newTemplateBtn">
+          <i class="fa-solid fa-plus"></i>
+          New Template
+        </button>
+      </div>
+
+      <div id="templatesWrap">
+        <div class="loading-row">
+          <span class="spinner"></span>
+          <span>Loading templates…</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEEDBACK TAB -->
+    <section class="tab-panel" id="panel-feedback">
+      <div class="section-head">
+        <h2 class="section-title">
+          Feedback
+          <span class="section-count" id="feedbackCount">—</span>
+        </h2>
+      </div>
+      <div id="feedbackWrap">
+        <div class="loading-row">
+          <span class="spinner"></span>
+          <span>Loading feedback…</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- TEMPLATE MODAL -->
+  <div class="modal-backdrop" id="templateModal">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 class="modal-title" id="modalTitle">New Template</h3>
+        <button class="modal-close" id="modalClose" aria-label="Close">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form class="modal-form" id="templateForm" novalidate>
+        <input type="hidden" id="templateIdInput" />
+
+        <div class="form-group">
+          <label class="form-label" for="tplName">Template Name</label>
+          <input
+            type="text"
+            id="tplName"
+            class="form-input"
+            placeholder="e.g. Christmas Lady"
+            maxlength="120"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="tplCategory">Category</label>
+          <select id="tplCategory" class="form-select" required>
+            <option value="">Select a category…</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="kids">Kids</option>
+            <option value="couple">Couple</option>
+            <option value="flyer">Flyer</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="tplPrompt">Prompt</label>
+          <textarea
+            id="tplPrompt"
+            class="form-textarea"
+            placeholder="Paste or type the AI prompt here. Line breaks are preserved."
+            required
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Template Image</label>
+          <div class="upload-box">
+            <div class="upload-preview" id="uploadPreview">
+              <span class="upload-preview-placeholder">🖼️</span>
+            </div>
+            <div class="upload-controls">
+              <button type="button" class="upload-btn" id="uploadBtn">
+                <i class="fa-solid fa-upload"></i>
+                <span id="uploadBtnText">Choose Image</span>
+              </button>
+              <input type="file" id="imageInput" accept="image/*" hidden />
+              <span class="upload-hint">JPG, PNG, or WEBP · Max 5 MB</span>
+              <div class="upload-progress" id="uploadProgress" hidden>
+                <div class="upload-progress-bar" id="uploadProgressBar"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" id="cancelBtn">Cancel</button>
+          <button type="submit" class="btn-primary" id="saveBtn">
+            <span id="saveBtnText">Save Template</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

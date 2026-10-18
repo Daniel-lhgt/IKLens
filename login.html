@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Sign in to your IKLens account — AI-powered creative image prompting platform" />
+  <meta name="theme-color" content="#07090e" />
+  <link rel="icon" type="image/png" href="images/IKLens - AI Image prompting platform.png">
+  <title>Sign In — IKLens</title>
+
+  <!-- Dependencies -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
+
+  <style>
+    :root {
+      --auth-bg: #07090e;
+      --auth-surface: #0f131c;
+      --auth-surface-elevated: #161c28;
+      --auth-border: rgba(255, 255, 255, 0.08);
+      --auth-border-focus: rgba(0, 210, 255, 0.5);
+      --auth-text-primary: #f3f5f9;
+      --auth-text-secondary: #94a3b8;
+      --auth-text-muted: #64748b;
+      --auth-cyan: #00d2ff;
+      --auth-purple: #8a2be2;
+      --auth-error: #ef4444;
+      --auth-success: #10b981;
+
+      --auth-gradient: linear-gradient(135deg, var(--auth-cyan), var(--auth-purple));
+      --auth-gradient-hover: linear-gradient(135deg, #33dfff, #9d4beb);
+      --auth-shadow-glow: 0 0 25px rgba(0, 210, 255, 0.25);
+      --auth-shadow-glow-strong: 0 0 35px rgba(0, 210, 255, 0.4);
+
+      --auth-radius-sm: 8px;
+      --auth-radius-md: 14px;
+      --auth-radius-lg: 20px;
+      --auth-radius-full: 9999px;
+
+      --auth-transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+      --auth-transition: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--auth-bg);
+      color: var(--auth-text-primary);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .auth-view-wrapper {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      background:
+        radial-gradient(ellipse at top left, rgba(0, 210, 255, 0.06), transparent 50%),
+        radial-gradient(ellipse at bottom right, rgba(138, 43, 226, 0.06), transparent 50%),
+        var(--auth-bg);
+    }
+
+    .auth-container {
+      width: 100%;
+      max-width: 1080px;
+      min-height: 640px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: var(--auth-surface);
+      border: 1px solid var(--auth-border);
+      border-radius: var(--auth-radius-lg);
+      overflow: hidden;
+      box-shadow:
+        0 25px 50px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+      animation: authFadeIn 0.6s ease-out forwards;
+      opacity: 0;
+    }
+
+    @keyframes authFadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* LEFT COLUMN */
+    .auth-visual-column {
+      position: relative;
+      background: #000;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .auth-visual-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      filter: brightness(0.85) contrast(1.08) saturate(1.1);
+      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
+      transform-origin: center;
+    }
+
+    .auth-visual-column:hover .auth-visual-image {
+      transform: scale(1.05);
+      filter: brightness(0.95) contrast(1.1) saturate(1.15);
+    }
+
+    .auth-visual-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(7, 9, 14, 0.2) 0%, rgba(7, 9, 14, 0.92) 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 40px;
+      pointer-events: none;
+    }
+
+    .auth-visual-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--auth-text-primary);
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .auth-visual-caption {
+      font-size: 0.9rem;
+      color: var(--auth-text-secondary);
+      line-height: 1.6;
+      max-width: 320px;
+    }
+
+    /* RIGHT COLUMN */
+    .auth-form-column {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 56px 48px;
+      background: var(--auth-surface);
+    }
+
+    .auth-header { margin-bottom: 36px; }
+
+    .auth-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+      text-decoration: none;
+      transition: opacity var(--auth-transition-fast);
+    }
+
+    .auth-brand:hover { opacity: 0.9; }
+
+    .auth-brand-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--auth-radius-sm);
+      object-fit: cover;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .auth-brand-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--auth-text-primary);
+    }
+
+    .auth-title {
+      font-size: 1.85rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .auth-subtitle {
+      font-size: 0.95rem;
+      color: var(--auth-text-secondary);
+    }
+
+    /* ERROR */
+    .auth-error-box {
+      display: none;
+      padding: 14px 16px;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      border-radius: var(--auth-radius-sm);
+      color: var(--auth-error);
+      font-size: 0.875rem;
+      margin-bottom: 24px;
+      align-items: flex-start;
+      gap: 10px;
+      animation: shake 0.4s ease-out;
+    }
+
+    .auth-error-box.visible { display: flex; }
+
+    .auth-error-box i {
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-4px); }
+      60% { transform: translateX(4px); }
+      100% { transform: translateX(0); }
+    }
+
+    /* FORM */
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--auth-text-primary);
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 14px 16px;
+      padding-right: 46px;
+      background: var(--auth-surface-elevated);
+      border: 1px solid var(--auth-border);
+      border-radius: var(--auth-radius-sm);
+      color: var(--auth-text-primary);
+      font-size: 0.95rem;
+      transition:
+        border-color var(--auth-transition),
+        box-shadow var(--auth-transition),
+        background-color var(--auth-transition);
+      outline: none;
+    }
+
+    .form-input::placeholder { color: var(--auth-text-muted); }
+
+    .form-input:hover {
+      border-color: rgba(255, 255, 255, 0.12);
+      background: #1a202e;
+    }
+
+    .form-input:focus {
+      border-color: var(--auth-border-focus);
+      box-shadow: 0 0 0 3px rgba(0, 210, 255, 0.15), 0 0 12px rgba(0, 210, 255, 0.08);
+      background: #1a202e;
+    }
+
+    .form-input:invalid:not(:placeholder-shown) {
+      border-color: rgba(239, 68, 68, 0.4);
+    }
+
+    /* PASSWORD TOGGLE */
+    .password-toggle-btn {
+      position: absolute;
+      right: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border: none;
+      background: transparent;
+      color: var(--auth-text-muted);
+      cursor: pointer;
+      border-radius: 6px;
+      transition: color var(--auth-transition-fast), background var(--auth-transition-fast);
+    }
+
+    .password-toggle-btn:hover {
+      color: var(--auth-text-primary);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .password-toggle-btn i { font-size: 1rem; }
+
+    /* UTILITY ROW */
+    .auth-utility-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.875rem;
+      margin-top: -4px;
+    }
+
+    .remember-me-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--auth-text-secondary);
+      cursor: pointer;
+      transition: color var(--auth-transition-fast);
+    }
+
+    .remember-me-label:hover { color: var(--auth-text-primary); }
+
+    .remember-checkbox {
+      accent-color: var(--auth-cyan);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .auth-link {
+      color: var(--auth-cyan);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color var(--auth-transition-fast), text-decoration-color 0.2s ease;
+      text-underline-offset: 2px;
+    }
+
+    .auth-link:hover {
+      color: #33dfff;
+      text-decoration: underline;
+      text-decoration-color: rgba(0, 210, 255, 0.4);
+    }
+
+    /* SUBMIT */
+    .auth-submit-btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: var(--auth-radius-full);
+      background: var(--auth-gradient);
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: var(--auth-shadow-glow);
+      transition:
+        transform var(--auth-transition),
+        box-shadow var(--auth-transition),
+        background var(--auth-transition);
+      margin-top: 4px;
+    }
+
+    .auth-submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--auth-shadow-glow-strong);
+      background: var(--auth-gradient-hover);
+    }
+
+    .auth-submit-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 0 20px rgba(0, 210, 255, 0.25);
+    }
+
+    .auth-submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .auth-footer-text {
+      text-align: center;
+      margin-top: 28px;
+      font-size: 0.9rem;
+      color: var(--auth-text-secondary);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .auth-container {
+        grid-template-columns: 1fr;
+        max-width: 480px;
+        min-height: auto;
+      }
+
+      .auth-visual-column { height: 220px; }
+      .auth-visual-overlay { padding: 24px; }
+      .auth-visual-title { font-size: 1.2rem; }
+      .auth-visual-caption { display: none; }
+      .auth-form-column { padding: 36px 28px; }
+      .auth-title { font-size: 1.6rem; }
+    }
+
+    @media (max-width: 480px) {
+      .auth-view-wrapper { padding: 16px 12px; }
+      .auth-form-column { padding: 28px 20px; }
+      .auth-utility-row {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      .auth-visual-image:hover { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-view-wrapper">
+    <div class="auth-container">
+
+      <!-- LEFT: HERO IMAGE -->
+      <div class="auth-visual-column">
+        <img
+          src="images/1789503195542.jpg"
+          alt="IKLens — Studio-grade creative prompting"
+          class="auth-visual-image"
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="auth-visual-overlay">
+          <h3 class="auth-visual-title">Studio-Grade Prompting</h3>
+          <p class="auth-visual-caption">Unlock precise control over lighting, composition, and visual moods for your creative production.</p>
+        </div>
+      </div>
+
+      <!-- RIGHT: FORM -->
+      <div class="auth-form-column">
+        <div class="auth-header">
+          <a href="index.html" class="auth-brand" aria-label="IKLens Home">
+            <img
+              src="images/IKLens%20-%20AI%20Image%20prompting%20platform.png"
+              alt="IKLens Logo"
+              class="auth-brand-logo"
+              loading="lazy"
+              decoding="async"
+            />
+            <span class="auth-brand-title">IKLens</span>
+          </a>
+          <h1 class="auth-title">Welcome back</h1>
+          <p class="auth-subtitle">Sign in to your account to continue creating</p>
+        </div>
+
+        <!-- ERROR -->
+        <div id="error-message" class="auth-error-box" role="alert" aria-live="polite">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span id="error-text"></span>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <form id="login-form" class="auth-form" novalidate>
+
+          <div class="form-group">
+            <label for="email" class="form-label">Email Address</label>
+            <div class="input-wrapper">
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="form-input"
+                placeholder="name@example.com"
+                required
+                autocomplete="email"
+                aria-required="true"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <div class="input-wrapper">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                class="form-input"
+                placeholder="••••••••"
+                required
+                autocomplete="current-password"
+                aria-required="true"
+              />
+              <button type="button" class="password-toggle-btn" data-target="password" aria-label="Toggle password visibility">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="auth-utility-row">
+            <label class="remember-me-label">
+              <input type="checkbox" id="remember-me" name="remember" class="remember-checkbox" />
+              <span>Remember me</span>
+            </label>
+            <a href="reset.html" id="forgot-password" class="auth-link">Forgot password?</a>
+          </div>
+
+          <button type="submit" id="login-btn" class="auth-submit-btn">
+            Sign In
+          </button>
+        </form>
+
+        <p class="auth-footer-text">
+          Don't have an account?
+          <a href="signup.html" class="auth-link">Register here</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+<!-- IKLens Firebase Authentication — RTDB-only project -->
+<script type="module">
+  import {
+    signInWithEmailAndPassword,
+    setPersistence,
+    browserLocalPersistence,
+    browserSessionPersistence,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+
+  import { auth } from "./js/firebase-config.js";
+
+  (() => {
+    "use strict";
+
+    /* ---------- DOM ---------- */
+    const form = document.getElementById("login-form");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const rememberInput = document.getElementById("remember-me");
+    const errorBox = document.getElementById("error-message");
+    const errorText = document.getElementById("error-text");
+    const submitBtn = document.getElementById("login-btn");
+
+    const originalButtonText = submitBtn.innerHTML;
+
+    /* ---------- STATE ---------- */
+    let requestInProgress = false;
+    let hasNavigated = false;
+    let authCheckComplete = false;
+
+    /* ---------- REDIRECT TARGET ---------- */
+    // Allows login.html?redirect=profile to send users back after login.
+    function getRedirectTarget() {
+      const params = new URLSearchParams(window.location.search);
+      const target = params.get("redirect");
+
+      // Only allow internal, safe paths.
+      if (!target) return "dashboard.html";
+
+      // Reject absolute URLs and protocol-relative paths.
+      if (/^(https?:)?\/\//i.test(target)) return "dashboard.html";
+      if (target.startsWith("//")) return "dashboard.html";
+
+      // Only allow simple relative filenames.
+      if (!/^[A-Za-z0-9_\-./]+\.html(\?.*)?$/.test(target)) {
+        return "dashboard.html";
+      }
+
+      return target;
+    }
+
+    function safeNavigate() {
+      if (hasNavigated) return;
+      hasNavigated = true;
+      window.location.replace(getRedirectTarget());
+    }
+
+    /* ---------- UI HELPERS ---------- */
+    function showError(message) {
+      errorText.textContent = message;
+      errorBox.classList.add("visible");
+      errorBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
+    function hideError() {
+      errorBox.classList.remove("visible");
+      errorText.textContent = "";
+    }
+
+    function setLoading(isLoading) {
+      submitBtn.disabled = isLoading;
+      form.setAttribute("aria-busy", String(isLoading));
+
+      submitBtn.innerHTML = isLoading
+        ? '<i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i> Signing in...'
+        : originalButtonText;
+    }
+
+    function friendlyMessage(error) {
+      const messages = {
+        "auth/invalid-credential": "The email or password is incorrect.",
+        "auth/invalid-email": "Please enter a valid email address.",
+        "auth/user-disabled": "This account has been disabled. Please contact support.",
+        "auth/too-many-requests": "Too many sign-in attempts. Please wait and try again.",
+        "auth/network-request-failed": "Unable to connect. Check your internet connection and try again.",
+        "auth/user-not-found": "The email or password is incorrect.",
+        "auth/wrong-password": "The email or password is incorrect.",
+        "auth/operation-not-allowed": "Email and password sign-in is not enabled. Please contact the site administrator.",
+        "auth/invalid-api-key": "Authentication configuration error. Please contact support."
+      };
+
+      return messages[error.code] ||
+        "Sign-in failed. Please check your details and try again.";
+    }
+
+    /* ---------- PASSWORD TOGGLE ---------- */
+    document.querySelectorAll(".password-toggle-btn").forEach(button => {
+      button.addEventListener("click", () => {
+        const input = document.getElementById(button.dataset.target);
+        const icon = button.querySelector("i");
+
+        const showing = input.type === "password";
+        input.type = showing ? "text" : "password";
+
+        icon.classList.toggle("fa-eye", !showing);
+        icon.classList.toggle("fa-eye-slash", showing);
+
+        button.setAttribute(
+          "aria-label",
+          showing ? "Hide password" : "Show password"
+        );
+      });
+    });
+
+    /* ---------- AUTO-REDIRECT IF ALREADY SIGNED IN ---------- */
+    onAuthStateChanged(
+      auth,
+      (user) => {
+        authCheckComplete = true;
+
+        // Only auto-redirect if we're not mid-login.
+        if (user && !requestInProgress && !hasNavigated) {
+          safeNavigate();
+        }
+      },
+      (error) => {
+        authCheckComplete = true;
+        console.error("Firebase session check failed:", error);
+      }
+    );
+
+    /* ---------- FORM SUBMIT ---------- */
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      if (requestInProgress || hasNavigated) return;
+
+      hideError();
+
+      const email = emailInput.value.trim().toLowerCase();
+      const password = passwordInput.value;
+
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showError("Please enter a valid email address.");
+        emailInput.focus();
+        return;
+      }
+
+      if (!password) {
+        showError("Please enter your password.");
+        passwordInput.focus();
+        return;
+      }
+
+      requestInProgress = true;
+      setLoading(true);
+
+      try {
+        await setPersistence(
+          auth,
+          rememberInput.checked
+            ? browserLocalPersistence
+            : browserSessionPersistence
+        );
+
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+
+        if (!userCredential.user) {
+          throw new Error("Unable to complete sign-in.");
+        }
+
+        safeNavigate();
+        return;
+
+      } catch (error) {
+        console.error("IKLens login error:", error);
+
+        showError(
+          error.code
+            ? friendlyMessage(error)
+            : "Something went wrong. Please try again."
+        );
+
+        requestInProgress = false;
+        setLoading(false);
+      }
+    });
+
+    /* ---------- CLEAR ERRORS ON EDIT ---------- */
+    [emailInput, passwordInput].forEach((input) => {
+      input.addEventListener("input", hideError);
+    });
+
+  })();
+</script>
+</body>
+</html>

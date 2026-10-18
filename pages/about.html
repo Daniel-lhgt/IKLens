@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About IKLens</title>
+  <style>
+    :root {
+      --ik-bg: #050714;
+      --ik-surface: #0f1223;
+      --ik-card: #151a30;
+      --ik-border: rgba(124, 138, 255, 0.12);
+      --ik-accent: #7c8aff;
+      --ik-accent-bright: #a5aeff;
+      --ik-text: #eef0ff;
+      --ik-text-secondary: #b0b8e6;
+      --ik-text-muted: #6b72b0;
+      --ik-link: #7c8aff;
+      --ik-link-hover: #a5aeff;
+      --ik-radius: 12px;
+      --ik-radius-lg: 16px;
+      --ik-transition: 0.2s ease-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--ik-bg);
+      min-height: 100vh;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    .legal-container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 24px 20px 60px;
+      color: var(--ik-text);
+    }
+
+    /* BACK BUTTON */
+    .back-section {
+      margin-bottom: 28px;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      border: none;
+      color: var(--ik-text-secondary);
+      font-size: 0.9rem;
+      padding: 8px 12px;
+      margin: -8px -12px;
+      cursor: pointer;
+      border-radius: var(--ik-radius);
+      transition: color var(--ik-transition), background var(--ik-transition);
+    }
+
+    .back-btn:hover {
+      color: var(--ik-accent-bright);
+      background: rgba(124, 138, 255, 0.08);
+    }
+
+    .back-icon {
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+
+    /* PAGE HEADER */
+    .page-header {
+      margin-bottom: 32px;
+    }
+
+    .legal-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: var(--ik-text);
+      line-height: 1.2;
+    }
+
+    .legal-updated {
+      font-size: 0.85rem;
+      color: var(--ik-text-muted);
+    }
+
+    /* CONTENT */
+    .legal-content {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      background: var(--ik-card);
+      border: 1px solid var(--ik-border);
+      border-radius: var(--ik-radius-lg);
+      padding: 32px 28px;
+      box-shadow: 0 8px 32px rgba(124, 138, 255, 0.06);
+    }
+
+    .legal-content h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--ik-accent-bright);
+      margin: 0 0 10px;
+    }
+
+    .legal-content p,
+    .legal-content li {
+      color: var(--ik-text-secondary);
+      line-height: 1.7;
+      font-size: 0.98rem;
+    }
+
+    .legal-content p {
+      color: var(--ik-text);
+    }
+
+    .legal-content ul {
+      padding-left: 22px;
+      margin: 4px 0;
+    }
+
+    .legal-content li {
+      margin-bottom: 10px;
+    }
+
+    .legal-link {
+      color: var(--ik-link);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color var(--ik-transition);
+    }
+
+    .legal-link:hover {
+      color: var(--ik-link-hover);
+      text-decoration: underline;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 480px) {
+      .legal-container {
+        padding: 20px 16px 40px;
+      }
+      .legal-content {
+        padding: 24px 18px;
+      }
+      .legal-title {
+        font-size: 1.5rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="legal-container">
+    <!-- BACK BUTTON -->
+    <div class="back-section">
+      <button class="back-btn" onclick="history.back(); return false;">
+        <span class="back-icon">←</span>
+        <span>Back</span>
+      </button>
+    </div>
+
+    <div class="page-header">
+      <h1 class="legal-title">About IKLens</h1>
+      <p class="legal-updated">Last updated: October 11, 2026</p>
+    </div>
+
+    <div class="legal-content">
+      <p><strong>IKLens</strong> is an AI-powered creative workspace designed to help you generate stunning portraits, promotional designs, and visual content with ease.</p>
+      
+      <h2>Our Mission</h2>
+      <p>We make professional-quality visual creation accessible to everyone — whether you're designing for yourself, your family, or your brand.</p>
+      
+      <h2>What We Offer</h2>
+      <ul>
+        <li>AI-powered image generation across categories: Male, Female, Kids, Couples, and Flyers</li>
+        <li>Simple, intuitive interface built for creators of all skill levels</li>
+        <li>Your creations remain yours — we don't claim ownership of your output</li>
+      </ul>
+      
+      <h2>Contact</h2>
+      <p>Have questions or feedback? Visit our Send Feedback section on your profile page.</p>
+    </div>
+  </section>
+</body>
+</html>

@@ -1,0 +1,422 @@
+<section class="home-view" id="home-view">
+  <!-- Greeting Section -->
+  <div class="greeting-section">
+    <h1 class="greeting-text" id="greeting-line">Good Morning<span class="wave">👋</span></h1>
+    <p class="greeting-subtitle">What will you create today?</p>
+  </div>
+
+  <!-- Categories Section -->
+  <section class="categories-section">
+    <h2>Choose a category</h2>
+    <div class="categories-grid">
+
+      <!-- Male -->
+      <button class="category-card" data-category="male" aria-label="Male — Browse male portraits">
+        <img src="images/category-male.jpg" alt="Male portrait sample" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+        <div class="card-fallback" style="display:none;">Male</div>
+        <div class="card-overlay">
+          <span class="card-label">Male</span>
+        </div>
+      </button>
+
+      <!-- Female -->
+      <button class="category-card" data-category="female" aria-label="Female — Browse female portraits">
+        <img src="images/category-female.jpg" alt="Female portrait sample" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+        <div class="card-fallback" style="display:none;">Female</div>
+        <div class="card-overlay">
+          <span class="card-label">Female</span>
+        </div>
+      </button>
+
+      <!-- Kids -->
+      <button class="category-card" data-category="kids" aria-label="Kids — Browse kids portraits">
+        <img src="images/category-kids.jpg" alt="Kids portrait sample" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+        <div class="card-fallback" style="display:none;">Kids</div>
+        <div class="card-overlay">
+          <span class="card-label">Kids</span>
+        </div>
+      </button>
+
+      <!-- Couple -->
+      <button class="category-card" data-category="couple" aria-label="Couple — Browse couple portraits">
+        <img src="images/category-couple.jpg" alt="Couple portrait sample" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+        <div class="card-fallback" style="display:none;">Couple</div>
+        <div class="card-overlay">
+          <span class="card-label">Couple</span>
+        </div>
+      </button>
+
+      <!-- Flyer -->
+      <button class="category-card" data-category="flyer" aria-label="Flyer — Browse flyer designs">
+        <img src="images/category-flyer.jpg" alt="Flyer design sample" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+        <div class="card-fallback" style="display:none;">Flyer</div>
+        <div class="card-overlay">
+          <span class="card-label">Flyer</span>
+        </div>
+      </button>
+
+    </div>
+  </section>
+</section>
+
+<style>
+  /* HOME VIEW STYLES — Scoped to match dashboard design system */
+  .home-view {
+    width: 100%;
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  /* Greeting Section */
+  .greeting-section {
+    margin: 10px 0 40px;
+  }
+
+  .greeting-text {
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--dash-text-primary);
+  }
+
+  .greeting-name {
+    background: var(--dash-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .wave {
+    display: inline-block;
+    animation: wave 2.5s infinite;
+    transform-origin: 70% 70%;
+  }
+
+  @keyframes wave {
+    0% { transform: rotate(0deg); }
+    10% { transform: rotate(14deg); }
+    20% { transform: rotate(-8deg); }
+    30% { transform: rotate(14deg); }
+    40% { transform: rotate(-4deg); }
+    50% { transform: rotate(10deg); }
+    60% { transform: rotate(0deg); }
+    100% { transform: rotate(0deg); }
+  }
+
+  .greeting-subtitle {
+    color: var(--dash-text-secondary);
+    margin-top: 10px;
+    font-size: 1rem;
+  }
+
+  /* Categories Section */
+  .categories-section h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--dash-text-primary);
+  }
+
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+  }
+
+  @media (min-width: 640px) {
+    .categories-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+  }
+
+  @media (min-width: 960px) {
+    .categories-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 22px;
+    }
+  }
+
+  .category-card {
+    position: relative;
+    border-radius: var(--dash-radius-md);
+    overflow: hidden;
+    aspect-ratio: 3/4;
+    cursor: pointer;
+    transition: transform var(--dash-transition), box-shadow var(--dash-transition);
+    background: var(--dash-surface-elevated);
+    padding: 0;
+    border: none;
+    width: 100%;
+  }
+
+  .category-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+    border-color: var(--dash-purple-light);
+  }
+
+  .category-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .category-card:hover img {
+    transform: scale(1.08);
+  }
+
+  .card-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 36px 14px 14px;
+    background: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.4) 60%, transparent);
+  }
+
+  .card-label {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .card-fallback {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--dash-surface-elevated);
+    color: var(--dash-text-secondary);
+    font-size: 1rem;
+    font-weight: 600;
+  }
+</style>
+
+
+<script type="module">
+import { onAuthStateChanged } from
+  "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+
+import {
+  ref,
+  get
+} from "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
+
+import { auth, database } from "./js/firebase-config.js";
+
+/* =====================================
+   MODULE-LEVEL STATE (per mount)
+===================================== */
+
+let unsubscribeAuth = null;
+let categoryClickHandler = null;
+let requestNumber = 0;
+
+/* =====================================
+   HELPERS
+===================================== */
+
+function getGreetingPhrase() {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good Morning";
+  if (hour < 17) return "Good Afternoon";
+  return "Good Evening";
+}
+
+function getFirstName(value) {
+  if (typeof value !== "string") return "";
+
+  const name = value.trim();
+  if (!name || name.includes("@")) return "";
+
+  return name.split(/\s+/)[0];
+}
+
+function firstString(...values) {
+  return values.find(
+    v => typeof v === "string" && v.trim()
+  )?.trim() || "";
+}
+
+function showGreeting(firstName = "") {
+  const greeting = document.getElementById("greeting-line");
+
+  if (!greeting) {
+    console.warn("[IKLens Home] greeting-line element not found.");
+    return;
+  }
+
+  greeting.replaceChildren();
+  greeting.appendChild(document.createTextNode(getGreetingPhrase()));
+
+  if (firstName) {
+    greeting.appendChild(document.createTextNode(", "));
+
+    const name = document.createElement("span");
+    name.className = "greeting-name";
+    name.textContent = firstName;
+
+    greeting.appendChild(name);
+  }
+
+  greeting.appendChild(document.createTextNode(" "));
+
+  const wave = document.createElement("span");
+  wave.className = "wave";
+  wave.textContent = "👋";
+  greeting.appendChild(wave);
+}
+
+/* =====================================
+   GREETING LOADER
+===================================== */
+
+async function updateGreeting(user) {
+  const thisRequest = ++requestNumber;
+
+  // Never display email as the greeting name.
+  showGreeting("");
+
+  if (!user) return;
+
+  try {
+    // 1. Try nested profile.
+    let snapshot = await get(
+      ref(database, `users/${user.uid}/profile`)
+    );
+
+    if (thisRequest !== requestNumber) return;
+
+    let profile = {};
+
+    if (snapshot.exists()) {
+      profile = snapshot.val() || {};
+    } else {
+      // 2. Fallback to root record.
+      snapshot = await get(ref(database, `users/${user.uid}`));
+
+      if (thisRequest !== requestNumber) return;
+
+      if (snapshot.exists()) {
+        profile = snapshot.val() || {};
+
+        if (profile.profile && typeof profile.profile === "object") {
+          profile = { ...profile, ...profile.profile };
+        }
+      }
+    }
+
+    const firstName =
+      getFirstName(profile.firstName) ||
+      getFirstName(profile.name) ||
+      getFirstName(profile.displayName) ||
+      getFirstName(user.displayName);
+
+    if (thisRequest === requestNumber) {
+      showGreeting(firstName);
+    }
+
+  } catch (error) {
+    console.error("[IKLens Home] Could not load greeting:", error);
+
+    if (thisRequest === requestNumber) {
+      showGreeting(getFirstName(user.displayName));
+    }
+  }
+}
+
+/* =====================================
+   CATEGORY NAVIGATION
+===================================== */
+
+function attachCategoryListener() {
+  categoryClickHandler = (event) => {
+    if (!(event.target instanceof Element)) return;
+
+    const card = event.target.closest(".category-card");
+    const home = document.getElementById("home-view");
+
+    if (!card || !home || !home.contains(card)) return;
+
+    const category = card.dataset.category;
+    if (!category) return;
+
+    event.preventDefault();
+
+    window.dispatchEvent(new CustomEvent("navigate", {
+      detail: { route: "gallery", params: { category } }
+    }));
+  };
+
+  document.addEventListener("click", categoryClickHandler);
+}
+
+function detachCategoryListener() {
+  if (categoryClickHandler) {
+    document.removeEventListener("click", categoryClickHandler);
+    categoryClickHandler = null;
+  }
+}
+
+/* =====================================
+   MOUNT / UNMOUNT
+===================================== */
+
+function mountHomeView() {
+  // Show something immediately, even before Firebase responds.
+  showGreeting("");
+
+  // Detach any prior listener before attaching a fresh one.
+  if (unsubscribeAuth) {
+    try { unsubscribeAuth(); } catch (_) {}
+    unsubscribeAuth = null;
+  }
+
+  unsubscribeAuth = onAuthStateChanged(
+    auth,
+    (user) => updateGreeting(user),
+    (error) => {
+      console.error("[IKLens Home] Auth listener failed:", error);
+      showGreeting();
+    }
+  );
+
+  // Attach a fresh category listener for this mount.
+  detachCategoryListener();
+  attachCategoryListener();
+}
+
+function unmountHomeView() {
+  if (unsubscribeAuth) {
+    try { unsubscribeAuth(); } catch (_) {}
+    unsubscribeAuth = null;
+  }
+
+  detachCategoryListener();
+  requestNumber = 0;
+}
+
+/* =====================================
+   EXPOSE FOR ROUTER
+===================================== */
+
+window.initHomeView = () => {
+  mountHomeView();
+};
+
+window.disposeHomeView = () => {
+  unmountHomeView();
+};
+
+// Auto-mount in case the router doesn't call initHomeView.
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", mountHomeView, { once: true });
+} else {
+  mountHomeView();
+}
+
+// Cleanup when the router swaps this view out.
+window.addEventListener("pagehide", unmountHomeView);
+</script>

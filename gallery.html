@@ -1,0 +1,640 @@
+<section class="gal-container" id="iklens-gallery-workspace">
+  <!-- CATEGORY FILTER BAR -->
+  <nav class="gal-filter-bar" aria-label="Category filter options" id="gal-filter-bar">
+    <button type="button" class="gal-filter-chip active" data-category="all">All</button>
+    <button type="button" class="gal-filter-chip" data-category="male">Male</button>
+    <button type="button" class="gal-filter-chip" data-category="female">Female</button>
+    <button type="button" class="gal-filter-chip" data-category="kids">Kids</button>
+    <button type="button" class="gal-filter-chip" data-category="couple">Couple</button>
+    <button type="button" class="gal-filter-chip" data-category="flyer">Flyer</button>
+  </nav>
+
+  <!-- TEMPLATE GRID -->
+  <main
+    class="gal-grid"
+    id="gal-template-grid"
+    role="region"
+    aria-live="polite"
+    aria-busy="false"
+  ></main>
+
+  <!-- EMPTY STATE -->
+  <div class="gal-empty" id="gal-empty" hidden>
+    <div class="gal-empty-icon">✨</div>
+    <h3 class="gal-empty-title">No templates yet</h3>
+    <p class="gal-empty-text">Check back soon — fresh prompts are on the way.</p>
+  </div>
+
+  <!-- LOAD MORE -->
+  <footer class="gal-load-more-wrap" id="gal-load-more-wrap" hidden>
+    <button type="button" class="gal-load-more-btn" id="gal-btn-load-more">
+      <span id="gal-load-spinner" class="gal-spinner" style="display: none;"></span>
+      <span id="gal-load-more-label">Load more</span>
+    </button>
+  </footer>
+</section>
+
+<style>
+  :root {
+    --gal-bg: #07090e;
+    --gal-surface: #0e131f;
+    --gal-surface-elevated: #161c2e;
+    --gal-border: rgba(255, 255, 255, 0.08);
+    --gal-border-hover: rgba(138, 43, 226, 0.4);
+    --gal-text-primary: #f8fafc;
+    --gal-text-secondary: #94a3b8;
+    --gal-text-muted: #64748b;
+    --gal-purple-primary: #7c3aed;
+    --gal-purple-light: #a855f7;
+    --gal-cyan: #06b6d4;
+    --gal-blue: #3b82f6;
+    --gal-radius-lg: 16px;
+    --gal-radius-md: 12px;
+    --gal-radius-sm: 8px;
+    --gal-radius-full: 9999px;
+    --gal-transition: 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .gal-container {
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    color: var(--gal-text-primary);
+  }
+
+  /* FILTER BAR */
+  .gal-filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scrollbar-width: none;
+  }
+
+  .gal-filter-bar::-webkit-scrollbar { display: none; }
+
+  .gal-filter-chip {
+    background: var(--gal-surface);
+    border: 1px solid var(--gal-border);
+    color: var(--gal-text-secondary);
+    padding: 8px 18px;
+    border-radius: var(--gal-radius-full);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all var(--gal-transition);
+    outline: none;
+    font-family: inherit;
+  }
+
+  .gal-filter-chip:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    color: var(--gal-text-primary);
+  }
+
+  .gal-filter-chip.active {
+    background: linear-gradient(135deg, var(--gal-purple-primary) 0%, var(--gal-blue) 100%);
+    border-color: transparent;
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
+  }
+
+  /* GRID */
+  .gal-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  @media (min-width: 640px) {
+    .gal-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .gal-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+  }
+
+  /* TEMPLATE CARD */
+  .gal-card {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    border-radius: var(--gal-radius-md);
+    overflow: hidden;
+    background: var(--gal-surface-elevated);
+    cursor: pointer;
+    border: 1px solid var(--gal-border);
+    padding: 0;
+    transition:
+      transform var(--gal-transition),
+      box-shadow var(--gal-transition),
+      border-color var(--gal-transition);
+  }
+
+  .gal-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+    border-color: var(--gal-border-hover);
+  }
+
+  .gal-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+
+  .gal-card:hover img {
+    transform: scale(1.05);
+  }
+
+  .gal-card-fallback {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gal-text-muted);
+    font-size: 1.6rem;
+    background: var(--gal-surface-elevated);
+  }
+
+  /* SKELETON */
+  .gal-skeleton {
+    aspect-ratio: 3 / 4;
+    border-radius: var(--gal-radius-md);
+    background: linear-gradient(
+      90deg,
+      var(--gal-surface-elevated) 0%,
+      #1f2738 50%,
+      var(--gal-surface-elevated) 100%
+    );
+    background-size: 200% 100%;
+    animation: galShimmer 1.4s linear infinite;
+  }
+
+  @keyframes galShimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* EMPTY STATE */
+  .gal-empty {
+    text-align: center;
+    padding: 60px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .gal-empty-icon {
+    font-size: 2.4rem;
+    margin-bottom: 8px;
+    opacity: 0.8;
+  }
+
+  .gal-empty-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--gal-text-primary);
+  }
+
+  .gal-empty-text {
+    font-size: 0.9rem;
+    color: var(--gal-text-muted);
+    max-width: 320px;
+    line-height: 1.5;
+  }
+
+  /* LOAD MORE */
+  .gal-load-more-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 12px;
+  }
+
+  .gal-load-more-btn {
+    background: transparent;
+    border: none;
+    color: var(--gal-purple-light);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 24px;
+    border-radius: var(--gal-radius-full);
+    transition: background var(--gal-transition);
+    font-family: inherit;
+    min-height: 44px;
+  }
+
+  .gal-load-more-btn:hover:not(:disabled) {
+    background: rgba(168, 85, 247, 0.1);
+  }
+
+  .gal-load-more-btn:disabled {
+    opacity: 0.7;
+    cursor: wait;
+  }
+
+  .gal-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(168, 85, 247, 0.3);
+    border-top-color: var(--gal-purple-light);
+    border-radius: 50%;
+    animation: galSpin 0.7s linear infinite;
+  }
+
+  @keyframes galSpin {
+    to { transform: rotate(360deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gal-filter-chip { transition: none !important; }
+    .gal-spinner { animation: none !important; }
+    .gal-skeleton { animation: none !important; }
+    .gal-card:hover { transform: none; }
+    .gal-card:hover img { transform: none; }
+  }
+</style>
+
+
+<script type="module">
+import {
+  ref,
+  get
+} from "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
+
+import { database } from "./js/firebase-config.js";
+
+/* =====================================
+   CONFIG
+===================================== */
+
+const VALID_CATEGORIES = ["all", "male", "female", "kids", "couple", "flyer"];
+const BATCH_SIZE = 4;
+const TEMPLATES_PATH = "templates";
+const MIN_LOAD_MORE_SPINNER_MS = 400;   // spinner visibility floor
+
+/* =====================================
+   STATE
+===================================== */
+
+let allTemplates = [];
+let filteredTemplates = [];
+let visibleCount = 0;
+let activeCategory = "all";
+let isLoaded = false;
+let clickHandler = null;
+
+/* =====================================
+   DOM
+===================================== */
+
+const grid = document.getElementById("gal-template-grid");
+const emptyState = document.getElementById("gal-empty");
+const loadMoreWrap = document.getElementById("gal-load-more-wrap");
+const loadMoreBtn = document.getElementById("gal-btn-load-more");
+const loadMoreLabel = document.getElementById("gal-load-more-label");
+const loadSpinner = document.getElementById("gal-load-spinner");
+const filterBar = document.getElementById("gal-filter-bar");
+
+/* =====================================
+   HELPERS
+===================================== */
+
+function safeImageUrl(url) {
+  if (typeof url !== "string") return "";
+  const trimmed = url.trim();
+  if (!trimmed) return "";
+
+  if (
+    /^https?:\/\//i.test(trimmed) ||
+    /^\/[^/]/.test(trimmed) ||
+    /^images\//i.test(trimmed) ||
+    /^\.\.?\//.test(trimmed)
+  ) {
+    return trimmed;
+  }
+  return "";
+}
+
+/* =====================================
+   SKELETON
+===================================== */
+
+function renderSkeletons(count = BATCH_SIZE * 2) {
+  grid.innerHTML = "";
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement("div");
+    el.className = "gal-skeleton";
+    el.setAttribute("aria-hidden", "true");
+    grid.appendChild(el);
+  }
+}
+
+/* =====================================
+   RENDER
+===================================== */
+
+function renderVisible() {
+  grid.innerHTML = "";
+
+  if (filteredTemplates.length === 0) {
+    grid.hidden = true;
+    emptyState.hidden = false;
+    loadMoreWrap.hidden = true;
+    return;
+  }
+
+  grid.hidden = false;
+  emptyState.hidden = true;
+
+  const slice = filteredTemplates.slice(0, visibleCount);
+
+  for (const template of slice) {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "gal-card";
+    card.dataset.templateId = template.id;
+    card.setAttribute(
+      "aria-label",
+      template.name ? `Open ${template.name}` : "Open template"
+    );
+
+    const url = safeImageUrl(template.image);
+
+    if (url) {
+      const img = document.createElement("img");
+      img.alt = template.name || "";
+      img.loading = "lazy";
+      img.decoding = "async";
+      img.src = url;
+
+      img.onerror = () => {
+        img.remove();
+        const fb = document.createElement("div");
+        fb.className = "gal-card-fallback";
+        fb.textContent = "🖼️";
+        card.appendChild(fb);
+      };
+
+      card.appendChild(img);
+    } else {
+      const fb = document.createElement("div");
+      fb.className = "gal-card-fallback";
+      fb.textContent = "🖼️";
+      card.appendChild(fb);
+    }
+
+    grid.appendChild(card);
+  }
+
+  const hasMore = visibleCount < filteredTemplates.length;
+  loadMoreWrap.hidden = !hasMore;
+}
+
+/* =====================================
+   CATEGORY FILTER
+===================================== */
+
+function setActiveCategory(category) {
+  const target = VALID_CATEGORIES.includes(category) ? category : "all";
+  activeCategory = target;
+
+  filterBar.querySelectorAll(".gal-filter-chip").forEach(chip => {
+    chip.classList.toggle("active", chip.dataset.category === target);
+  });
+
+  filteredTemplates =
+    target === "all"
+      ? allTemplates.slice()
+      : allTemplates.filter(t => t.category === target);
+
+  visibleCount = Math.min(BATCH_SIZE, filteredTemplates.length);
+
+  if (isLoaded) {
+    renderVisible();
+  }
+}
+
+/* =====================================
+   FETCH — always fresh
+===================================== */
+
+async function fetchTemplates() {
+  try {
+    const snap = await get(ref(database, TEMPLATES_PATH));
+
+    if (!snap.exists()) {
+      allTemplates = [];
+      return;
+    }
+
+    const data = snap.val() || {};
+
+    allTemplates = Object.entries(data)
+      .map(([id, value]) => {
+        if (!value || typeof value !== "object") return null;
+
+        return {
+          id,
+          name: typeof value.name === "string" ? value.name : "",
+          category:
+            typeof value.category === "string"
+              ? value.category.toLowerCase()
+              : "",
+          image: typeof value.image === "string" ? value.image : "",
+          prompt: typeof value.prompt === "string" ? value.prompt : "",
+          createdAt:
+            typeof value.createdAt === "number" ? value.createdAt : 0
+        };
+      })
+      .filter(Boolean)
+      .sort((a, b) => b.createdAt - a.createdAt);
+
+    console.log(
+      `[IKLens Gallery] Loaded ${allTemplates.length} templates from RTDB.`
+    );
+
+  } catch (error) {
+    console.error("[IKLens Gallery] Failed to load templates:", error);
+    allTemplates = [];
+  }
+}
+
+/* =====================================
+   LOAD MORE
+===================================== */
+
+async function handleLoadMore() {
+  if (visibleCount >= filteredTemplates.length) return;
+
+  loadMoreBtn.disabled = true;
+  loadSpinner.style.display = "inline-block";
+  loadMoreLabel.textContent = "Loading";
+
+  // Ensure the spinner is visible for at least N ms,
+  // even if the operation is instant.
+  const start = Date.now();
+
+  visibleCount = Math.min(
+    visibleCount + BATCH_SIZE,
+    filteredTemplates.length
+  );
+
+  renderVisible();
+
+  const elapsed = Date.now() - start;
+  const wait = Math.max(0, MIN_LOAD_MORE_SPINNER_MS - elapsed);
+
+  await new Promise(r => setTimeout(r, wait));
+
+  loadMoreBtn.disabled = false;
+  loadSpinner.style.display = "none";
+  loadMoreLabel.textContent = "Load more";
+}
+
+/* =====================================
+   CARD CLICK → NAVIGATE
+===================================== */
+
+function attachClickHandler() {
+  clickHandler = (event) => {
+    if (!(event.target instanceof Element)) return;
+
+    const card = event.target.closest(".gal-card");
+    if (!card) return;
+
+    const templateId = card.dataset.templateId;
+    if (!templateId) return;
+
+    event.preventDefault();
+
+    const targetURL = new URL("generate.html", document.baseURI);
+    targetURL.searchParams.set("template", templateId);
+
+    window.location.assign(targetURL.href);
+  };
+
+  document.addEventListener("click", clickHandler);
+}
+
+function detachClickHandler() {
+  if (clickHandler) {
+    document.removeEventListener("click", clickHandler);
+    clickHandler = null;
+  }
+}
+
+/* =====================================
+   MOUNT / UNMOUNT
+===================================== */
+
+async function mountGalleryView(params = {}) {
+  // Reset state for a fresh mount.
+  isLoaded = false;
+  allTemplates = [];
+  filteredTemplates = [];
+  visibleCount = 0;
+
+  renderSkeletons();
+  emptyState.hidden = true;
+  loadMoreWrap.hidden = true;
+  grid.setAttribute("aria-busy", "true");
+
+  attachClickHandler();
+
+  // Apply category from route params, if provided.
+  const cat = String(params.category || "").toLowerCase().trim();
+  if (VALID_CATEGORIES.includes(cat)) {
+    activeCategory = cat;
+    filterBar.querySelectorAll(".gal-filter-chip").forEach(chip => {
+      chip.classList.toggle("active", chip.dataset.category === cat);
+    });
+  }
+
+  // ALWAYS re-fetch — no caching between mounts.
+  await fetchTemplates();
+
+  isLoaded = true;
+  grid.setAttribute("aria-busy", "false");
+
+  setActiveCategory(activeCategory);
+  renderVisible();
+}
+
+function unmountGalleryView() {
+  detachClickHandler();
+  allTemplates = [];
+  filteredTemplates = [];
+  visibleCount = 0;
+  isLoaded = false;
+}
+
+/* =====================================
+   EVENTS
+===================================== */
+
+filterBar.addEventListener("click", event => {
+  const chip = event.target.closest(".gal-filter-chip");
+  if (!chip) return;
+  setActiveCategory(chip.dataset.category);
+});
+
+loadMoreBtn.addEventListener("click", handleLoadMore);
+
+/* =====================================
+   EXPOSE FOR ROUTER
+===================================== */
+
+window.initGalleryView = (params = {}) => {
+  mountGalleryView(params);
+};
+
+window.disposeGalleryView = () => {
+  unmountGalleryView();
+};
+
+// Handle category param when view already mounted.
+window.addEventListener("viewParams", event => {
+  const cat = String(event.detail?.category || "").toLowerCase().trim();
+  if (VALID_CATEGORIES.includes(cat) && isLoaded) {
+    setActiveCategory(cat);
+  }
+});
+
+// Cleanup on page hide.
+window.addEventListener("pagehide", unmountGalleryView);
+
+// Auto-mount fallback.
+if (document.readyState === "loading") {
+  document.addEventListener(
+    "DOMContentLoaded",
+    () => mountGalleryView({}),
+    { once: true }
+  );
+} else {
+  mountGalleryView({});
+}
+</script>

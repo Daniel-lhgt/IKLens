@@ -1,0 +1,134 @@
+
+<script>
+(function () {
+  const urlParams = new URLSearchParams(window.location.search);
+  const routerError = window.IKLensError || {};
+
+  const titleEl = document.getElementById("iklens-error-title");
+  const messageEl = document.getElementById("iklens-error-message");
+  const codeEl = document.getElementById("iklens-error-code");
+  const retryBtn = document.getElementById("iklens-err-retry-btn");
+  const homeBtn = document.getElementById("iklens-err-home-btn");
+
+  const requestedRoute =
+    urlParams.get("from") || routerError.requestedRoute || "home";
+
+  const message =
+    urlParams.get("message") || routerError.message;
+
+  const errorCode =
+    urlParams.get("code") || routerError.code;
+
+  // Restore the parameters saved by router.js.
+  let retryParams = {};
+
+  try {
+    const savedParams = urlParams.get("retryParams");
+
+    if (savedParams) {
+      const parsed = JSON.parse(savedParams);
+
+      if (
+        parsed &&
+        typeof parsed === "object" &&
+        !Array.isArray(parsed)
+      ) {
+        retryParams = parsed;
+      }
+    }
+  } catch (error) {
+    console.warn("[IKLens Error] Could not restore retry parameters.");
+  }
+
+  const isStandaloneErrorPage =
+    /(?:^|\/)error\.html$/.test(window.location.pathname);
+
+  if (message && messageEl) {
+    messageEl.textContent = message;
+  }
+
+  if (errorCode && codeEl) {
+    codeEl.textContent = "ERR_CODE: " + errorCode;
+  }
+
+  function openDashboardRoute(route, params = {}) {
+    const allowedRoutes = [
+      "home",
+      "gallery",
+      "profile",
+      "create",
+      "create-prompt",
+      "generate-prompt"
+    ];
+
+    const safeRoute = allowedRoutes.includes(route) ? route : "home";
+
+    const dashboardURL = new URL(
+      "dashboard.html",
+      document.baseURI
+    );
+
+    const query = new URLSearchParams();
+
+    Object.entries(params).forEach(([key, value]) => {
+      if (
+        value !== undefined &&
+        value !== null &&
+        typeof value !== "object"
+      ) {
+        query.set(key, String(value));
+      }
+    });
+
+    dashboardURL.hash =
+      "/" + safeRoute +
+      (query.toString() ? "?" + query.toString() : "");
+
+    window.location.assign(dashboardURL.href);
+  }
+
+  if (retryBtn) {
+    retryBtn.addEventListener("click", function () {
+      retryBtn.disabled = true;
+
+      if (isStandaloneErrorPage) {
+        // Return to the dashboard and retry the failed route.
+        openDashboardRoute(requestedRoute, retryParams);
+        return;
+      }
+
+      // When this error view is inside the dashboard, let router.js
+      // retry the original route without a full-page reload.
+      if (window.IKLensRouter) {
+        window.dispatchEvent(
+          new CustomEvent("iklens:retry-navigation", {
+            detail: {
+              route: requestedRoute,
+              params: retryParams
+            }
+          })
+        );
+
+        window.setTimeout(function () {
+          retryBtn.disabled = false;
+        }, 1000);
+
+        return;
+      }
+
+      // Recover if the router is not available.
+      openDashboardRoute(requestedRoute, retryParams);
+    });
+  }
+
+  if (homeBtn) {
+    homeBtn.addEventListener("click", function (event) {
+      if (isStandaloneErrorPage) {
+        event.preventDefault();
+        openDashboardRoute("home");
+      }
+      // Inside the dashboard, router.js handles data-route="home".
+    });
+  }
+})();
+</script>
