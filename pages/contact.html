@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#07090e" />
+  <title>Contact IKLens</title>
+  <meta name="description" content="Questions, feedback or a problem? Send IKLens a message and we'll reply by email." />
+  <link rel="canonical" href="https://iklens.netlify.app/pages/contact.html" />
+    <link rel="icon" type="image/png" href="IKLens - AI Image prompting platform.png" />
+<style>
+  body {
+    background-color: #07090e;
+    color: #f3f5f9;
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    margin: 0;
+  }
+  .legal-container { max-width: 680px; margin: 0 auto; padding: 24px 20px 60px; }
+  .legal-topbar { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
+  .legal-back-btn {
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #0f131c; color: #f3f5f9;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; flex-shrink: 0;
+  }
+  .legal-back-btn svg { width: 18px; height: 18px; }
+  .legal-back-btn:hover { background: #161c28; border-color: rgba(255, 255, 255, 0.16); }
+  .legal-title { font-size: 1.8rem; font-weight: 800; margin: 0 0 6px; letter-spacing: -0.02em; }
+  .legal-lead { color: #94a3b8; line-height: 1.6; margin: 0 0 24px; font-size: 0.98rem; }
+  .legal-lead a { color: #00d2ff; }
+
+  .legal-content {
+    background: #0f131c;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 32px 28px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  }
+  .field { margin-bottom: 20px; }
+  .field label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 8px; color: #f3f5f9; }
+  .field input, .field select, .field textarea {
+    width: 100%; box-sizing: border-box;
+    background: #07090e; color: #f3f5f9;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 12px; padding: 12px 14px;
+    font: inherit; font-size: 1rem;
+  }
+  .field textarea { min-height: 150px; resize: vertical; line-height: 1.5; }
+  .field input:focus-visible, .field select:focus-visible, .field textarea:focus-visible,
+  .legal-back-btn:focus-visible, .send-btn:focus-visible {
+    outline: 2px solid #00d2ff; outline-offset: 2px;
+  }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .send-btn {
+    width: 100%; padding: 14px 20px; border: 0; border-radius: 12px; cursor: pointer;
+    font: inherit; font-size: 1rem; font-weight: 700;
+    background: linear-gradient(135deg, #00d2ff, #8a2be2); color: #07090e;
+  }
+  .send-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .form-status { margin-top: 16px; font-size: 0.95rem; line-height: 1.5; min-height: 1.4em; color: #94a3b8; }
+  .form-status.ok { color: #4ade80; }
+  .form-status.err { color: #f87171; }
+  .form-status a { color: #00d2ff; }
+  @media (max-width: 480px) {
+    .legal-container { padding: 20px 16px 40px; }
+    .legal-content { padding: 24px 20px; }
+    .legal-title { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+  <main class="legal-container">
+    <div class="legal-topbar">
+      <button type="button" class="legal-back-btn" id="back-btn" aria-label="Go back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <h1 class="legal-title">Contact us</h1>
+    <p class="legal-lead">
+      Questions, feedback, or something not working? Send us a message and we'll reply by email.
+      You can also write to us directly at <a href="mailto:iklens.support@gmail.com">iklens.support@gmail.com</a>.
+    </p>
+
+    <div class="legal-content">
+      <form name="contact" method="POST" action="/pages/contact.html" data-netlify="true" netlify-honeypot="bot-field" id="contact-form">
+        <input type="hidden" name="form-name" value="contact" />
+        <input type="hidden" name="subject" id="subject" value="IKLens contact message" />
+        <p class="hp" aria-hidden="true">
+          <label>Leave this empty: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+        </p>
+
+        <div class="field">
+          <label for="c-name">Your name</label>
+          <input id="c-name" name="name" type="text" autocomplete="name" required maxlength="80" />
+        </div>
+
+        <div class="field">
+          <label for="c-email">Your email</label>
+          <input id="c-email" name="email" type="email" autocomplete="email" required maxlength="120" />
+        </div>
+
+        <div class="field">
+          <label for="c-topic">What is this about?</label>
+          <select id="c-topic" name="topic">
+            <option>Question</option>
+            <option>Feedback or idea</option>
+            <option>Report a problem</option>
+            <option>Privacy or account data request</option>
+            <option>Something else</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="c-message">Message</label>
+          <textarea id="c-message" name="message" required minlength="10" maxlength="2000"></textarea>
+        </div>
+
+        <button type="submit" class="send-btn" id="send-btn">Send message</button>
+        <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </main>
+
+<script>
+  (function () {
+    var form = document.getElementById("contact-form");
+    var btn = document.getElementById("send-btn");
+    var status = document.getElementById("form-status");
+    var subject = document.getElementById("subject");
+    var topic = document.getElementById("c-topic");
+
+    document.getElementById("back-btn").addEventListener("click", function () {
+      if (history.length > 1) history.back(); else location.href = "../index.html";
+    });
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      subject.value = "IKLens contact: " + topic.value;
+      btn.disabled = true;
+      status.className = "form-status";
+      status.textContent = "Sending…";
+
+      fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(new FormData(form)).toString()
+      }).then(function (res) {
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        form.reset();
+        status.className = "form-status ok";
+        status.textContent = "Thanks! Your message was sent. We'll reply to the email you gave us.";
+      }).catch(function () {
+        status.className = "form-status err";
+        status.innerHTML = 'Sorry, that didn\u2019t go through. Please email us at <a href="mailto:iklens.support@gmail.com">iklens.support@gmail.com</a>.';
+      }).then(function () { btn.disabled = false; });
+    });
+  })();
+</script>
+</body>
+</html>

@@ -1,173 +1,146 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#07090e" />
   <title>Terms of Service — IKLens</title>
-  <style>
-    :root {
-      --ik-bg: #050714;
-      --ik-surface: #0f1223;
-      --ik-card: #151a30;
-      --ik-border: rgba(124, 138, 255, 0.12);
-      --ik-accent: #7c8aff;
-      --ik-accent-bright: #a5aeff;
-      --ik-text: #eef0ff;
-      --ik-text-secondary: #b0b8e6;
-      --ik-text-muted: #6b72b0;
-      --ik-link: #7c8aff;
-      --ik-link-hover: #a5aeff;
-      --ik-radius: 12px;
-      --ik-radius-lg: 16px;
-      --ik-transition: 0.2s ease-out;
-    }
+  <link rel="stylesheet" href="js/design-system.css" />
+    <link rel="icon" type="image/png" href="IKLens - AI Image prompting platform.png" />
+<style>
+  /* Force Dark Mode */
+  body {
+    background-color: #07090e !important;
+    color: #f3f5f9 !important;
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+  .legal-container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+  }
 
-    body {
-      background: var(--ik-bg);
-      min-height: 100vh;
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    }
+  /* ===== TOPBAR & BACK BUTTON ===== */
+  .legal-topbar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
 
+  .legal-back-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #0f131c;
+    color: #f3f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  }
+
+  .legal-back-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .legal-back-btn:hover {
+    background: #161c28;
+    border-color: rgba(255, 255, 255, 0.16);
+  }
+
+  .legal-back-btn:active {
+    transform: scale(0.95);
+  }
+
+  /* ===== PAGE HEADER ===== */
+  .page-header {
+    margin-bottom: 24px;
+  }
+
+  .legal-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+    color: #f3f5f9;
+  }
+
+  .legal-updated {
+    font-size: 0.85rem;
+    color: #64748b;
+  }
+
+  /* ===== CONTENT CARD ===== */
+  .legal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    background: #0f131c;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 32px 28px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  .legal-content h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #00d2ff;
+    margin: 0 0 8px;
+  }
+
+  .legal-content p {
+    color: #94a3b8;
+    line-height: 1.7;
+    font-size: 0.95rem;
+  }
+
+  .legal-content strong {
+    color: #f3f5f9;
+    font-weight: 600;
+  }
+
+  .legal-content ul {
+    list-style: disc;
+    padding-left: 20px;
+    margin: 4px 0;
+    color: #94a3b8;
+  }
+
+  .legal-content li {
+    margin-bottom: 10px;
+    line-height: 1.6;
+    font-size: 0.95rem;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 480px) {
     .legal-container {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 24px 20px 60px;
-      color: var(--ik-text);
+      padding: 20px 16px 40px;
     }
-
-    /* BACK BUTTON */
-    .back-section {
-      margin-bottom: 28px;
-    }
-
-    .back-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: transparent;
-      border: none;
-      color: var(--ik-text-secondary);
-      font-size: 0.9rem;
-      padding: 8px 12px;
-      margin: -8px -12px;
-      cursor: pointer;
-      border-radius: var(--ik-radius);
-      transition: color var(--ik-transition), background var(--ik-transition);
-    }
-
-    .back-btn:hover {
-      color: var(--ik-accent-bright);
-      background: rgba(124, 138, 255, 0.08);
-    }
-
-    .back-icon {
-      font-size: 1.1rem;
-      line-height: 1;
-    }
-
-    /* PAGE HEADER */
-    .page-header {
-      margin-bottom: 32px;
-    }
-
-    .legal-title {
-      font-size: 1.8rem;
-      font-weight: 800;
-      margin-bottom: 8px;
-      color: var(--ik-text);
-      line-height: 1.2;
-    }
-
-    .legal-updated {
-      font-size: 0.85rem;
-      color: var(--ik-text-muted);
-    }
-
-    /* CONTENT */
     .legal-content {
-      display: flex;
-      flex-direction: column;
-      gap: 28px;
-      background: var(--ik-card);
-      border: 1px solid var(--ik-border);
-      border-radius: var(--ik-radius-lg);
-      padding: 32px 28px;
-      box-shadow: 0 8px 32px rgba(124, 138, 255, 0.06);
+      padding: 24px 20px;
     }
-
-    .legal-content h2 {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--ik-accent-bright);
-      margin: 0 0 10px;
+    .legal-title {
+      font-size: 1.5rem;
     }
-
-    .legal-content p,
-    .legal-content li {
-      color: var(--ik-text-secondary);
-      line-height: 1.7;
-      font-size: 0.98rem;
-    }
-
-    .legal-content strong {
-      color: var(--ik-text);
-      font-weight: 600;
-    }
-
-    .legal-content ul {
-      padding-left: 22px;
-      margin: 4px 0;
-    }
-
-    .legal-content li {
-      margin-bottom: 10px;
-    }
-
-    .legal-link {
-      color: var(--ik-link);
-      text-decoration: none;
-      font-weight: 500;
-      transition: color var(--ik-transition);
-    }
-
-    .legal-link:hover {
-      color: var(--ik-link-hover);
-      text-decoration: underline;
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 480px) {
-      .legal-container {
-        padding: 20px 16px 40px;
-      }
-      .legal-content {
-        padding: 24px 18px;
-      }
-      .legal-title {
-        font-size: 1.5rem;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      * {
-        transition-duration: 0.01ms !important;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
   <section class="legal-container">
-    <!-- BACK BUTTON -->
-    <div class="back-section">
-      <button class="back-btn" onclick="history.back(); return false;">
-        <span class="back-icon">←</span>
-        <span>Back</span>
+    
+    <div class="legal-topbar">
+      <button type="button" class="legal-back-btn" onclick="history.back(); return false;" aria-label="Go back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
       </button>
     </div>
 
@@ -179,28 +152,40 @@
     <div class="legal-content">
       <p>By accessing or using IKLens, you agree to these terms. If you do not agree, please do not use the service.</p>
       
-      <h2>1. Service Description</h2>
-      <p>IKLens provides an AI-powered platform for generating visual content. The service is provided "as is" without warranties of any kind.</p>
+      <div>
+        <h2>1. Service Description</h2>
+        <p>IKLens provides an AI-powered platform for generating visual content. The service is provided "as is" without warranties of any kind.</p>
+      </div>
       
-      <h2>2. User Responsibilities</h2>
-      <ul>
-        <li>You must provide accurate account information</li>
-        <li>Keep your login credentials secure</li>
-        <li>Do not use the service for illegal, infringing, or harmful purposes</li>
-        <li>Do not attempt to disrupt or overload the system</li>
-      </ul>
+      <div>
+        <h2>2. User Responsibilities</h2>
+        <ul>
+          <li>You must provide accurate account information</li>
+          <li>Keep your login credentials secure</li>
+          <li>Do not use the service for illegal, infringing, or harmful purposes</li>
+          <li>Do not attempt to disrupt or overload the system</li>
+        </ul>
+      </div>
       
-      <h2>3. Intellectual Property</h2>
-      <p>You retain rights to content you generate through the platform. Our underlying technology, interface, and branding remain our property.</p>
+      <div>
+        <h2>3. Intellectual Property</h2>
+        <p>You retain rights to content you generate through the platform. Our underlying technology, interface, and branding remain our property.</p>
+      </div>
       
-      <h2>4. Prohibited Uses</h2>
-      <p>You may not generate or distribute content that is illegal, infringes rights, depicts harm, or violates applicable laws.</p>
+      <div>
+        <h2>4. Prohibited Uses</h2>
+        <p>You may not generate or distribute content that is illegal, infringes rights, depicts harm, or violates applicable laws.</p>
+      </div>
       
-      <h2>5. Changes & Termination</h2>
-      <p>We may modify these terms or discontinue service at any time. Continued use constitutes acceptance of updated terms.</p>
+      <div>
+        <h2>5. Changes & Termination</h2>
+        <p>We may modify these terms or discontinue service at any time. Continued use constitutes acceptance of updated terms.</p>
+      </div>
       
-      <h2>6. Limitation of Liability</h2>
-      <p>We are not liable for indirect, incidental, or consequential damages arising from your use of the platform.</p>
+      <div>
+        <h2>6. Limitation of Liability</h2>
+        <p>We are not liable for indirect, incidental, or consequential damages arising from your use of the platform.</p>
+      </div>
       
       <p style="margin-top: 8px;">Questions? Reach us via the feedback form on your profile page.</p>
     </div>

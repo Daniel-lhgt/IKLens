@@ -7,14 +7,11 @@
   <meta name="theme-color" content="#07090e" />
   <meta name="robots" content="noindex, nofollow" />
 
-  <!-- Favicon -->
   <link rel="icon" type="image/png" href="images/IKLens - AI Image prompting platform.png" />
   <link rel="apple-touch-icon" href="images/IKLens - AI Image prompting platform.png" />
 
   <title>Reset Password — IKLens</title>
 
-  <!-- Dependencies -->
-  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
 
   <style>
@@ -184,6 +181,18 @@
       max-width: 360px;
     }
 
+    /* STATE VISIBILITY */
+    .auth-state { display: none; }
+    .auth-state.active {
+      display: block;
+      animation: stateFade 0.35s ease-out;
+    }
+
+    @keyframes stateFade {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     /* STATUS MESSAGES */
     .auth-status-box {
       display: none;
@@ -222,6 +231,25 @@
       border: 1px solid rgba(239, 68, 68, 0.25);
       color: var(--auth-error);
     }
+
+    /* EMAIL PILL (State 2) */
+    .auth-email-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(0, 210, 255, 0.08);
+      border: 1px solid rgba(0, 210, 255, 0.25);
+      border-radius: var(--auth-radius-full);
+      color: var(--auth-cyan);
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 24px;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+
+    .auth-email-pill i { font-size: 0.85rem; flex-shrink: 0; }
 
     /* FORM */
     .auth-form {
@@ -264,6 +292,8 @@
       outline: none;
     }
 
+    .form-input.with-toggle { padding-right: 48px; }
+
     .form-input::placeholder { color: var(--auth-text-muted); }
 
     .form-input:focus {
@@ -274,6 +304,36 @@
 
     .form-input:invalid:not(:placeholder-shown) {
       border-color: rgba(239, 68, 68, 0.4);
+    }
+
+    /* PASSWORD TOGGLE */
+    .password-toggle-btn {
+      position: absolute;
+      right: 10px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      color: var(--auth-text-muted);
+      cursor: pointer;
+      border-radius: 6px;
+      transition: color var(--auth-transition), background var(--auth-transition);
+    }
+
+    .password-toggle-btn:hover {
+      color: var(--auth-text-primary);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* PASSWORD HINT */
+    .password-hint {
+      font-size: 0.75rem;
+      color: var(--auth-text-muted);
+      line-height: 1.5;
+      margin-top: -2px;
     }
 
     /* SUBMIT */
@@ -327,12 +387,56 @@
       animation: btnSpin 0.8s linear infinite;
     }
 
-    @keyframes btnSpin {
-      to { transform: rotate(360deg); }
-    }
+    @keyframes btnSpin { to { transform: rotate(360deg); } }
 
     .auth-submit-btn.loading .btn-spinner { display: inline-block; }
     .auth-submit-btn.loading .btn-text { opacity: 0.8; }
+
+    /* SECONDARY BUTTON */
+    .auth-secondary-btn {
+      display: block;
+      width: 100%;
+      padding: 13px;
+      border: 1px solid var(--auth-border);
+      border-radius: var(--auth-radius-full);
+      background: transparent;
+      color: var(--auth-text-secondary);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      text-align: center;
+      text-decoration: none;
+      transition: background var(--auth-transition), border-color var(--auth-transition), color var(--auth-transition);
+      margin-top: 12px;
+    }
+
+    .auth-secondary-btn:hover {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 255, 255, 0.18);
+      color: var(--auth-text-primary);
+    }
+
+    /* VERIFY LOADER (initial state before we know the code is valid) */
+    .auth-verify-loader {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 40px 0;
+      color: var(--auth-text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .auth-verify-spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid rgba(0, 210, 255, 0.15);
+      border-top-color: var(--auth-cyan);
+      border-radius: 50%;
+      animation: btnSpin 0.9s linear infinite;
+    }
 
     /* FOOTER */
     .auth-footer-text {
@@ -391,7 +495,7 @@
   <div class="auth-view-wrapper">
     <div class="auth-container">
 
-      <!-- LEFT: VISUAL HERO -->
+      <!-- LEFT: VISUAL -->
       <div class="auth-visual-column">
         <img
           src="images/image.png"
@@ -405,7 +509,7 @@
         </div>
       </div>
 
-      <!-- RIGHT: RESET FORM -->
+      <!-- RIGHT: FORM -->
       <div class="auth-form-column">
         <div class="auth-header">
           <a href="index.html" class="auth-brand" aria-label="Go to IKLens homepage">
@@ -416,53 +520,178 @@
             />
             <span class="auth-brand-title">IKLens</span>
           </a>
+        </div>
 
-          <h1 class="auth-title">Reset your password</h1>
-          <p class="auth-subtitle">
-            Enter the email associated with your account and we'll send instructions to reset your password.
+        <!-- ============================================
+             STATE 1 — REQUEST RESET LINK
+             ============================================ -->
+        <div class="auth-state" id="state-request">
+          <div class="auth-header" style="margin-bottom: 24px;">
+            <h1 class="auth-title">Reset your password</h1>
+            <p class="auth-subtitle">
+              Enter the email associated with your account and we'll send you a secure link to reset your password.
+            </p>
+          </div>
+
+          <div id="request-success" class="auth-status-box auth-status-success" role="status" aria-live="polite">
+            <i class="fa-solid fa-check-circle auth-status-icon"></i>
+            <span id="request-success-text">Check your inbox! We've sent a reset link to your email address.</span>
+          </div>
+
+          <div id="request-error" class="auth-status-box auth-status-error" role="alert" aria-live="assertive">
+            <i class="fa-solid fa-circle-exclamation auth-status-icon"></i>
+            <span id="request-error-text">Something went wrong. Please try again later.</span>
+          </div>
+
+          <form id="request-form" class="auth-form" novalidate>
+            <div class="form-group">
+              <label for="reset-email" class="form-label">Email Address</label>
+              <div class="input-wrapper">
+                <input
+                  type="email"
+                  id="reset-email"
+                  name="email"
+                  class="form-input"
+                  placeholder="name@example.com"
+                  required
+                  autocomplete="email"
+                  spellcheck="false"
+                  inputmode="email"
+                />
+              </div>
+            </div>
+
+            <button type="submit" id="request-btn" class="auth-submit-btn">
+              <span class="btn-spinner" aria-hidden="true"></span>
+              <span class="btn-text">Send reset link</span>
+            </button>
+          </form>
+
+          <p class="auth-footer-text">
+            Remember your password?
+            <a href="login.html" class="auth-link">Back to login</a>
           </p>
         </div>
 
-        <!-- SUCCESS -->
-        <div id="reset-success-message" class="auth-status-box auth-status-success" role="status" aria-live="polite">
-          <i class="fa-solid fa-check-circle auth-status-icon"></i>
-          <span>Check your inbox! We've sent a reset link to your email address.</span>
-        </div>
-
-        <!-- ERROR -->
-        <div id="reset-error-message" class="auth-status-box auth-status-error" role="alert" aria-live="assertive">
-          <i class="fa-solid fa-circle-exclamation auth-status-icon"></i>
-          <span id="reset-error-text">Something went wrong. Please try again later.</span>
-        </div>
-
-        <form id="reset-form" class="auth-form" novalidate>
-          <div class="form-group">
-            <label for="reset-email" class="form-label">Email Address</label>
-            <div class="input-wrapper">
-              <input
-                type="email"
-                id="reset-email"
-                name="email"
-                class="form-input"
-                placeholder="name@example.com"
-                required
-                autocomplete="email"
-                spellcheck="false"
-                inputmode="email"
-              />
-            </div>
+        <!-- ============================================
+             STATE 2 — CHOOSE NEW PASSWORD
+             ============================================ -->
+        <div class="auth-state" id="state-reset">
+          <div class="auth-header" style="margin-bottom: 20px;">
+            <h1 class="auth-title">Choose a new password</h1>
+            <p class="auth-subtitle">
+              Pick a strong password you haven't used before. You'll be signed out of all devices and asked to sign in again.
+            </p>
           </div>
 
-          <button type="submit" id="reset-btn" class="auth-submit-btn">
-            <span class="btn-spinner" aria-hidden="true"></span>
-            <span class="btn-text">Send reset link</span>
-          </button>
-        </form>
+          <div class="auth-email-pill" id="reset-email-pill">
+            <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+            <span id="reset-email-display">your account</span>
+          </div>
 
-        <p class="auth-footer-text">
-          Remember your password?
-          <a href="login.html" class="auth-link">Back to login</a>
-        </p>
+          <div id="reset-error" class="auth-status-box auth-status-error" role="alert" aria-live="assertive">
+            <i class="fa-solid fa-circle-exclamation auth-status-icon"></i>
+            <span id="reset-error-text">Something went wrong. Please try again.</span>
+          </div>
+
+          <form id="reset-form" class="auth-form" novalidate>
+            <div class="form-group">
+              <label for="new-password" class="form-label">New Password</label>
+              <div class="input-wrapper">
+                <input
+                  type="password"
+                  id="new-password"
+                  name="new-password"
+                  class="form-input with-toggle"
+                  placeholder="At least 6 characters"
+                  required
+                  autocomplete="new-password"
+                  minlength="6"
+                />
+                <button type="button" class="password-toggle-btn" data-target="new-password" aria-label="Show password">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+              <p class="password-hint">Use at least 6 characters. Longer passwords are safer.</p>
+            </div>
+
+            <div class="form-group">
+              <label for="confirm-password" class="form-label">Confirm Password</label>
+              <div class="input-wrapper">
+                <input
+                  type="password"
+                  id="confirm-password"
+                  name="confirm-password"
+                  class="form-input with-toggle"
+                  placeholder="Re-enter your password"
+                  required
+                  autocomplete="new-password"
+                  minlength="6"
+                />
+                <button type="button" class="password-toggle-btn" data-target="confirm-password" aria-label="Show password">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" id="reset-submit-btn" class="auth-submit-btn">
+              <span class="btn-spinner" aria-hidden="true"></span>
+              <span class="btn-text">Update password</span>
+            </button>
+          </form>
+
+          <p class="auth-footer-text">
+            <a href="login.html" class="auth-link">Back to login</a>
+          </p>
+        </div>
+
+        <!-- ============================================
+             STATE 3 — LINK INVALID / EXPIRED
+             ============================================ -->
+        <div class="auth-state" id="state-invalid">
+          <div class="auth-header" style="margin-bottom: 24px;">
+            <h1 class="auth-title">This link is no longer valid</h1>
+            <p class="auth-subtitle" id="invalid-subtitle">
+              Password reset links expire after one hour and can only be used once. Request a new one to continue.
+            </p>
+          </div>
+
+          <a href="reset.html" class="auth-secondary-btn" id="invalid-new-link">
+            <i class="fa-solid fa-paper-plane" style="margin-right: 8px;"></i>
+            Request a new reset link
+          </a>
+
+          <p class="auth-footer-text">
+            <a href="login.html" class="auth-link">Back to login</a>
+          </p>
+        </div>
+
+        <!-- ============================================
+             VERIFY LOADER — shown while checking oobCode
+             ============================================ -->
+        <div class="auth-state" id="state-verifying">
+          <div class="auth-verify-loader">
+            <div class="auth-verify-spinner"></div>
+            <span>Verifying your reset link…</span>
+          </div>
+        </div>
+
+        <!-- ============================================
+             STATE 4 — SUCCESS (after password reset)
+             ============================================ -->
+        <div class="auth-state" id="state-success">
+          <div class="auth-header" style="margin-bottom: 24px;">
+            <h1 class="auth-title">Password updated</h1>
+            <p class="auth-subtitle">
+              Your password has been changed successfully. You can now sign in with your new password.
+            </p>
+          </div>
+
+          <a href="login.html" class="auth-submit-btn" style="text-decoration: none;">
+            <span class="btn-text">Continue to sign in</span>
+          </a>
+        </div>
+
       </div>
     </div>
   </div>
@@ -470,6 +699,8 @@
 <script type="module">
   import {
     sendPasswordResetEmail,
+    confirmPasswordReset,
+    verifyPasswordResetCode,
     onAuthStateChanged
   } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
 
@@ -478,52 +709,110 @@
   (() => {
     "use strict";
 
-    /* ---------- DOM ---------- */
-    const form = document.getElementById("reset-form");
-    const emailInput = document.getElementById("reset-email");
-    const submitBtn = document.getElementById("reset-btn");
+    /* =========================================
+       DOM
+    ========================================= */
+    const states = {
+      request:   document.getElementById("state-request"),
+      reset:     document.getElementById("state-reset"),
+      invalid:   document.getElementById("state-invalid"),
+      verifying: document.getElementById("state-verifying"),
+      success:   document.getElementById("state-success")
+    };
 
-    const successBox = document.getElementById("reset-success-message");
-    const errorBox = document.getElementById("reset-error-message");
-    const errorText = document.getElementById("reset-error-text");
+    // Request form
+    const requestForm       = document.getElementById("request-form");
+    const emailInput        = document.getElementById("reset-email");
+    const requestBtn        = document.getElementById("request-btn");
+    const requestBtnText    = requestBtn.querySelector(".btn-text");
+    const requestSuccess    = document.getElementById("request-success");
+    const requestSuccessTxt = document.getElementById("request-success-text");
+    const requestError      = document.getElementById("request-error");
+    const requestErrorTxt   = document.getElementById("request-error-text");
 
-    const successText = successBox.querySelector("span");
-    const buttonText = submitBtn.querySelector(".btn-text");
+    // Reset form
+    const resetForm         = document.getElementById("reset-form");
+    const newPasswordInput  = document.getElementById("new-password");
+    const confirmInput      = document.getElementById("confirm-password");
+    const resetSubmitBtn    = document.getElementById("reset-submit-btn");
+    const resetSubmitTxt    = resetSubmitBtn.querySelector(".btn-text");
+    const resetError        = document.getElementById("reset-error");
+    const resetErrorTxt     = document.getElementById("reset-error-text");
+    const resetEmailDisplay = document.getElementById("reset-email-display");
 
-    /* ---------- STATE ---------- */
-    let submitting = false;
-    let hasNavigated = false;
+    // Invalid
+    const invalidSubtitle   = document.getElementById("invalid-subtitle");
 
-    /* ---------- UI HELPERS ---------- */
-    function hideStatus() {
-      successBox.classList.remove("visible");
-      errorBox.classList.remove("visible");
+    /* =========================================
+       STATE
+    ========================================= */
+    const params  = new URLSearchParams(window.location.search);
+    const oobCode = params.get("oobCode");
+    const mode    = params.get("mode");
+
+    let resetEmail   = "";   // the email being reset (from verifyPasswordResetCode)
+    let verifying    = false;
+    let submitting   = false;
+    let navigated    = false;
+
+    /* =========================================
+       STATE SWITCHING
+    ========================================= */
+    function showState(name) {
+      Object.entries(states).forEach(([key, el]) => {
+        el.classList.toggle("active", key === name);
+      });
     }
 
-    function showSuccess(message) {
-      successText.textContent = message;
-      successBox.classList.add("visible");
-      errorBox.classList.remove("visible");
+    /* =========================================
+       UI HELPERS
+    ========================================= */
+    function hideRequestMessages() {
+      requestSuccess.classList.remove("visible");
+      requestError.classList.remove("visible");
     }
 
-    function showError(message) {
-      errorText.textContent = message;
-      errorBox.classList.add("visible");
-      successBox.classList.remove("visible");
+    function showRequestError(msg) {
+      requestErrorTxt.textContent = msg;
+      requestError.classList.add("visible");
+      requestSuccess.classList.remove("visible");
     }
 
-    function setLoading(loading) {
-      submitBtn.disabled = loading;
-      submitBtn.classList.toggle("loading", loading);
-      submitBtn.setAttribute("aria-busy", String(loading));
+    function showRequestSuccess(msg) {
+      requestSuccessTxt.textContent = msg;
+      requestSuccess.classList.add("visible");
+      requestError.classList.remove("visible");
+    }
 
-      buttonText.textContent = loading
-        ? "Sending reset link..."
+    function hideResetError() {
+      resetError.classList.remove("visible");
+    }
+
+    function showResetError(msg) {
+      resetErrorTxt.textContent = msg;
+      resetError.classList.add("visible");
+    }
+
+    function setRequestLoading(loading) {
+      requestBtn.disabled = loading;
+      requestBtn.classList.toggle("loading", loading);
+      requestBtn.setAttribute("aria-busy", String(loading));
+      requestBtnText.textContent = loading
+        ? "Sending reset link…"
         : "Send reset link";
     }
 
-    function getFirebaseErrorMessage(error) {
-      switch (error.code) {
+    function setResetLoading(loading) {
+      resetSubmitBtn.disabled = loading;
+      resetSubmitBtn.classList.toggle("loading", loading);
+      resetSubmitBtn.setAttribute("aria-busy", String(loading));
+      resetSubmitTxt.textContent = loading
+        ? "Updating password…"
+        : "Update password";
+    }
+
+    function friendlyRequestError(code) {
+      switch (code) {
         case "auth/invalid-email":
           return "Please enter a valid email address.";
         case "auth/too-many-requests":
@@ -539,30 +828,56 @@
       }
     }
 
-    /* ---------- AUTO-REDIRECT IF ALREADY SIGNED IN ---------- */
-    // A logged-in user does not need a password reset page —
-    // send them straight to the dashboard.
-    onAuthStateChanged(auth, (user) => {
-      if (user && !submitting && !hasNavigated) {
-        hasNavigated = true;
-        window.location.replace("dashboard.html");
+    function friendlyResetError(code) {
+      switch (code) {
+        case "auth/expired-action-code":
+          return "This reset link has expired. Please request a new one.";
+        case "auth/invalid-action-code":
+          return "This reset link is invalid or has already been used.";
+        case "auth/user-disabled":
+          return "This account has been disabled. Please contact support.";
+        case "auth/user-not-found":
+          return "No account is associated with this reset link.";
+        case "auth/weak-password":
+          return "Please choose a stronger password (at least 6 characters).";
+        case "auth/network-request-failed":
+          return "Network error. Check your internet connection and try again.";
+        default:
+          return "We could not update your password. Please try again.";
       }
+    }
+
+    /* =========================================
+       PASSWORD TOGGLES
+    ========================================= */
+    document.querySelectorAll(".password-toggle-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const input = document.getElementById(btn.dataset.target);
+        if (!input) return;
+        const icon = btn.querySelector("i");
+        const showing = input.type === "password";
+        input.type = showing ? "text" : "password";
+        icon.classList.toggle("fa-eye", !showing);
+        icon.classList.toggle("fa-eye-slash", showing);
+        btn.setAttribute("aria-label", showing ? "Hide password" : "Show password");
+      });
     });
 
-    /* ---------- FORM ---------- */
-    emailInput.addEventListener("input", hideStatus);
+    /* =========================================
+       STATE 1 — REQUEST RESET LINK
+    ========================================= */
+    emailInput.addEventListener("input", hideRequestMessages);
 
-    form.addEventListener("submit", async (event) => {
-      event.preventDefault();
-
+    requestForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
       if (submitting) return;
 
-      hideStatus();
+      hideRequestMessages();
 
       const email = emailInput.value.trim();
 
       if (!email) {
-        showError("Please enter your email address.");
+        showRequestError("Please enter your email address.");
         emailInput.focus();
         return;
       }
@@ -571,42 +886,195 @@
         email.length > 254 ||
         !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
       ) {
-        showError("Please enter a valid email address.");
+        showRequestError("Please enter a valid email address.");
         emailInput.focus();
         return;
       }
 
       submitting = true;
-      setLoading(true);
+      setRequestLoading(true);
 
       try {
-        await sendPasswordResetEmail(auth, email);
+        // The continueUrl is where Firebase redirects the user
+        // after validating the oobCode. That's THIS page.
+        const actionCodeSettings = {
+          url: new URL("reset.html", window.location.href).href,
+          handleCodeInApp: false
+        };
 
-        // Anti-enumeration: same message whether or not the email exists.
-        showSuccess(
-          "If an account matches that email, reset instructions will be sent shortly."
+        await sendPasswordResetEmail(auth, email, actionCodeSettings);
+
+        // Anti-enumeration: same message whether or not the account exists.
+        showRequestSuccess(
+          "If an account matches that email, reset instructions will be sent shortly. Check your inbox (and spam folder)."
         );
+        requestForm.reset();
 
-        form.reset();
+      } catch (err) {
+        console.error("[IKLens Reset] Send failed:", err);
 
-      } catch (error) {
-        console.error("Password reset error:", error.code);
-
-        if (error.code === "auth/user-not-found") {
-          // Same success message — do not reveal whether the account exists.
-          showSuccess(
-            "If an account matches that email, reset instructions will be sent shortly."
+        if (err.code === "auth/user-not-found") {
+          // Anti-enumeration — same message.
+          showRequestSuccess(
+            "If an account matches that email, reset instructions will be sent shortly. Check your inbox (and spam folder)."
           );
-          form.reset();
+          requestForm.reset();
         } else {
-          showError(getFirebaseErrorMessage(error));
+          showRequestError(friendlyRequestError(err.code));
         }
-
       } finally {
         submitting = false;
-        setLoading(false);
+        setRequestLoading(false);
       }
     });
+
+    /* =========================================
+       STATE 2 — VERIFY oobCode THEN RESET
+    ========================================= */
+    async function verifyAndShowReset() {
+      verifying = true;
+      showState("verifying");
+
+      try {
+        // verifyPasswordResetCode confirms the code is valid and
+        // returns the email address it belongs to.
+        const email = await verifyPasswordResetCode(auth, oobCode);
+        resetEmail = email || "";
+        resetEmailDisplay.textContent = resetEmail || "your account";
+
+        // Clear URL (privacy: don't leave oobCode in the address bar).
+        // Keep the code in memory only.
+        try {
+          const cleanURL = new URL(window.location.href);
+          cleanURL.search = "";
+          window.history.replaceState({}, "", cleanURL.pathname);
+        } catch (_) {}
+
+        showState("reset");
+        setTimeout(() => newPasswordInput.focus(), 100);
+
+      } catch (err) {
+        console.error("[IKLens Reset] Verify failed:", err);
+
+        const code = err?.code || "";
+
+        if (code === "auth/expired-action-code") {
+          invalidSubtitle.textContent =
+            "This reset link has expired. Password reset links are valid for 1 hour. Request a new one to continue.";
+        } else if (code === "auth/invalid-action-code") {
+          invalidSubtitle.textContent =
+            "This reset link is invalid or has already been used. Request a new one to continue.";
+        } else if (code === "auth/user-disabled") {
+          invalidSubtitle.textContent =
+            "The account associated with this link has been disabled. Please contact support.";
+        } else if (code === "auth/user-not-found") {
+          invalidSubtitle.textContent =
+            "No account is associated with this reset link. Request a new one to continue.";
+        } else {
+          invalidSubtitle.textContent =
+            "We couldn't verify this reset link. Request a new one to continue.";
+        }
+
+        showState("invalid");
+      } finally {
+        verifying = false;
+      }
+    }
+
+    /* =========================================
+       STATE 2 — SUBMIT NEW PASSWORD
+    ========================================= */
+    [newPasswordInput, confirmInput].forEach(el => {
+      el.addEventListener("input", hideResetError);
+    });
+
+    resetForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (submitting || !oobCode) return;
+
+      hideResetError();
+
+      const pw  = newPasswordInput.value;
+      const pw2 = confirmInput.value;
+
+      if (pw.length < 6) {
+        showResetError("Your password must be at least 6 characters.");
+        newPasswordInput.focus();
+        return;
+      }
+
+      if (pw !== pw2) {
+        showResetError("Passwords do not match.");
+        confirmInput.focus();
+        return;
+      }
+
+      submitting = true;
+      setResetLoading(true);
+
+      try {
+        await confirmPasswordReset(auth, oobCode, pw);
+
+        // Success — show State 4
+        showState("success");
+
+      } catch (err) {
+        console.error("[IKLens Reset] Confirm failed:", err);
+
+        const code = err?.code || "";
+
+        if (
+          code === "auth/expired-action-code" ||
+          code === "auth/invalid-action-code" ||
+          code === "auth/user-not-found" ||
+          code === "auth/user-disabled"
+        ) {
+          invalidSubtitle.textContent =
+            "This reset link is no longer valid. It may have expired or already been used. Request a new one to continue.";
+          showState("invalid");
+        } else {
+          showResetError(friendlyResetError(code));
+        }
+      } finally {
+        submitting = false;
+        setResetLoading(false);
+      }
+    });
+
+    /* =========================================
+       BOOT — pick the initial state
+    ========================================= */
+    function boot() {
+      // Case 1: coming from a reset email (has oobCode)
+      if (oobCode) {
+        // Only handle resetPassword mode (Firebase also sends verifyEmail, etc.)
+        if (mode && mode !== "resetPassword") {
+          invalidSubtitle.textContent =
+            "This link is not a password reset link. If you were trying to reset your password, request a new one.";
+          showState("invalid");
+          return;
+        }
+
+        verifyAndShowReset();
+        return;
+      }
+
+      // Case 2: bare reset.html — show the request form
+      showState("request");
+
+      // But if the user is already signed in, they don't need to be here.
+      // (Skip the redirect if they have an oobCode — Case 1 already returned.)
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user && !navigated && !oobCode) {
+          navigated = true;
+          window.location.replace("dashboard.html");
+        }
+        try { unsubscribe(); } catch (_) {}
+      });
+    }
+
+    // Run after DOM is ready (module scripts execute after parsing anyway).
+    boot();
 
   })();
 </script>

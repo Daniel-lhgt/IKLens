@@ -1,134 +1,423 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#07090e" />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/png" href="images/IKLens - AI Image prompting platform.png" />
+  <title>Something went wrong — IKLens</title>
 
-<script>
-(function () {
-  const urlParams = new URLSearchParams(window.location.search);
-  const routerError = window.IKLensError || {};
+  <style>
+    :root {
+      --bg: #07090e;
+      --surface: #0f131c;
+      --surface-elevated: #161c28;
+      --border: rgba(255, 255, 255, 0.08);
+      --text-primary: #f3f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --cyan: #00d2ff;
+      --purple: #8a2be2;
+      --gradient: linear-gradient(135deg, #8a2be2, #00d2ff);
+      --radius-sm: 8px;
+      --radius-lg: 22px;
+      --radius-pill: 9999px;
+    }
 
-  const titleEl = document.getElementById("iklens-error-title");
-  const messageEl = document.getElementById("iklens-error-message");
-  const codeEl = document.getElementById("iklens-error-code");
-  const retryBtn = document.getElementById("iklens-err-retry-btn");
-  const homeBtn = document.getElementById("iklens-err-home-btn");
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; }
 
-  const requestedRoute =
-    urlParams.get("from") || routerError.requestedRoute || "home";
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse at top left, rgba(138, 43, 226, 0.10), transparent 55%),
+        radial-gradient(ellipse at bottom right, rgba(0, 210, 255, 0.08), transparent 55%),
+        var(--bg);
+      color: var(--text-primary);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    }
 
-  const message =
-    urlParams.get("message") || routerError.message;
+    .err-card {
+      width: 100%;
+      max-width: 460px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 44px 32px 28px;
+      text-align: center;
+      box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+      animation: cardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
 
-  const errorCode =
-    urlParams.get("code") || routerError.code;
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(12px) scale(0.98); }
+      to   { opacity: 1; transform: translateY(0)    scale(1); }
+    }
 
-  // Restore the parameters saved by router.js.
-  let retryParams = {};
+    .err-icon {
+      width: 88px;
+      height: 88px;
+      margin: 0 auto 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.4rem;
+      background: linear-gradient(135deg, rgba(138, 43, 226, 0.15), rgba(0, 210, 255, 0.10));
+      border: 1px solid rgba(138, 43, 226, 0.3);
+      box-shadow: 0 0 30px rgba(138, 43, 226, 0.2);
+      animation: iconPulse 3s ease-in-out infinite;
+    }
 
-  try {
-    const savedParams = urlParams.get("retryParams");
+    @keyframes iconPulse {
+      0%, 100% { box-shadow: 0 0 30px rgba(138, 43, 226, 0.2); }
+      50%      { box-shadow: 0 0 42px rgba(138, 43, 226, 0.35); }
+    }
 
-    if (savedParams) {
-      const parsed = JSON.parse(savedParams);
+    .err-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
 
-      if (
-        parsed &&
-        typeof parsed === "object" &&
-        !Array.isArray(parsed)
-      ) {
-        retryParams = parsed;
+    .err-message {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      margin-bottom: 16px;
+    }
+
+    .err-code {
+      display: inline-block;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+      letter-spacing: 0.04em;
+      margin-bottom: 26px;
+      padding: 4px 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+    }
+
+    .err-code[hidden] { display: none; }
+
+    .err-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .err-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 24px;
+      border-radius: var(--radius-pill);
+      font-size: 0.95rem;
+      font-weight: 600;
+      font-family: inherit;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition:
+        transform 0.15s ease,
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+
+    .err-btn:active { transform: scale(0.98); }
+
+    .err-btn-primary {
+      background: var(--gradient);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(138, 43, 226, 0.35);
+    }
+
+    .err-btn-primary:hover {
+      box-shadow: 0 8px 28px rgba(138, 43, 226, 0.45);
+      transform: translateY(-1px);
+    }
+
+    .err-btn-secondary {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+
+    .err-btn-secondary:hover {
+      background: var(--surface-elevated);
+      border-color: rgba(255, 255, 255, 0.14);
+      color: var(--text-primary);
+    }
+
+    .err-back {
+      display: inline-block;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+      transition: color 0.15s ease, background 0.15s ease;
+    }
+
+    .err-back:hover {
+      color: var(--text-secondary);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .err-back[hidden] { display: none; }
+
+    @media (max-width: 420px) {
+      .err-card { padding: 32px 22px 22px; border-radius: 18px; }
+      .err-icon { width: 72px; height: 72px; font-size: 2rem; margin-bottom: 20px; }
+      .err-title { font-size: 1.25rem; }
+      .err-message { font-size: 0.9rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
       }
     }
-  } catch (error) {
-    console.warn("[IKLens Error] Could not restore retry parameters.");
-  }
+  </style>
+</head>
+<body>
 
-  const isStandaloneErrorPage =
-    /(?:^|\/)error\.html$/.test(window.location.pathname);
+  <main class="err-card" role="main">
+    <div class="err-icon" id="err-icon" aria-hidden="true">⚠️</div>
 
-  if (message && messageEl) {
-    messageEl.textContent = message;
-  }
+    <h1 class="err-title" id="err-title">Something went wrong</h1>
 
-  if (errorCode && codeEl) {
-    codeEl.textContent = "ERR_CODE: " + errorCode;
-  }
+    <p class="err-message" id="err-message" role="alert" aria-live="polite">
+      We hit an unexpected snag. Please try again in a moment.
+    </p>
 
-  function openDashboardRoute(route, params = {}) {
-    const allowedRoutes = [
-      "home",
-      "gallery",
-      "profile",
-      "create",
-      "create-prompt",
-      "generate-prompt"
-    ];
+    <div class="err-code" id="err-code" hidden></div>
 
-    const safeRoute = allowedRoutes.includes(route) ? route : "home";
+    <div class="err-actions">
+      <a class="err-btn err-btn-primary"   id="err-primary"   href="dashboard.html#/home">Try Again</a>
+      <a class="err-btn err-btn-secondary" id="err-secondary" href="index.html">Back to Homepage</a>
+    </div>
 
-    const dashboardURL = new URL(
-      "dashboard.html",
-      document.baseURI
-    );
+    <a class="err-back" id="err-back" href="#" hidden>← Back</a>
+  </main>
 
-    const query = new URLSearchParams();
+  <noscript>
+    <div style="position:fixed;inset:0;background:#07090e;color:#f3f5f9;padding:32px;display:flex;align-items:center;justify-content:center;font-family:system-ui,sans-serif;text-align:center;z-index:9999;">
+      <div>
+        <p style="font-size:1.2rem;font-weight:700;margin-bottom:12px;">JavaScript is disabled</p>
+        <p style="color:#94a3b8;margin-bottom:20px;">Please enable JavaScript to use IKLens, or return to the homepage.</p>
+        <a href="index.html" style="color:#00d2ff;text-decoration:none;font-weight:600;">← Go to Homepage</a>
+      </div>
+    </div>
+  </noscript>
 
-    Object.entries(params).forEach(([key, value]) => {
-      if (
-        value !== undefined &&
-        value !== null &&
-        typeof value !== "object"
-      ) {
-        query.set(key, String(value));
+  <script>
+    (function () {
+      "use strict";
+
+      /* ============================================================
+         CONFIG
+      ============================================================ */
+      const SAFE_ROUTES     = ["home", "gallery", "explore", "profile", "generate", "submit", "notification"];
+      const MAX_MESSAGE_LEN = 400;
+
+      const PRESETS = {
+        AUTH_CHECK_FAILED: {
+          icon: "🔐",
+          title: "We couldn't verify your session",
+          message: "Your sign-in may have expired or your connection dropped. Sign in again to continue.",
+          primary:   { label: "Sign In",           href: "login.html" },
+          secondary: { label: "Back to Homepage",  href: "index.html" }
+        },
+        AUTH_FAILED: {
+          icon: "🔐",
+          title: "Session expired",
+          message: "For your security, please sign in again to continue.",
+          primary:   { label: "Sign In",           href: "login.html" },
+          secondary: { label: "Back to Homepage",  href: "index.html" }
+        },
+        SESSION_EXPIRED: {
+          icon: "⏱️",
+          title: "Your session has expired",
+          message: "Please sign in again to keep using IKLens.",
+          primary:   { label: "Sign In",           href: "login.html" },
+          secondary: { label: "Back to Homepage",  href: "index.html" }
+        },
+        ROUTE_LOAD_FAILED: {
+          icon: "🌐",
+          title: "This page didn't load",
+          message: "The page you tried to open couldn't be reached. This is usually temporary — give it another try.",
+          primary:   { label: "Try Again",         action: "retry" },
+          secondary: { label: "Go to Dashboard",   href: "dashboard.html#/home" }
+        },
+        DASHBOARD_ERROR: {
+          icon: "🛠️",
+          title: "Dashboard hit a snag",
+          message: "Something didn't initialize correctly. Let's try loading it fresh.",
+          primary:   { label: "Reload Dashboard",  href: "dashboard.html#/home" },
+          secondary: { label: "Back to Homepage",  href: "index.html" }
+        },
+        DASHBOARD_ELEMENTS_MISSING: {
+          icon: "🛠️",
+          title: "Dashboard couldn't load",
+          message: "A required component didn't appear. A fresh reload usually fixes this.",
+          primary:   { label: "Reload Dashboard",  href: "dashboard.html#/home" },
+          secondary: { label: "Back to Homepage",  href: "index.html" }
+        },
+        NETWORK_ERROR: {
+          icon: "📡",
+          title: "You appear to be offline",
+          message: "Check your internet connection and try again — we'll be here when you're back.",
+          primary:   { label: "Try Again",         action: "retry" },
+          secondary: { label: "Back to Homepage",  href: "index.html" }
+        },
+        NOT_FOUND: {
+          icon: "🔍",
+          title: "We couldn't find that page",
+          message: "The page may have moved, or it never existed. Let's get you back on track.",
+          primary:   { label: "Go to Dashboard",   href: "dashboard.html#/home" },
+          secondary: { label: "Back to Homepage",  href: "index.html" }
+        },
+        DEFAULT: {
+          icon: "⚠️",
+          title: "Something went wrong",
+          message: "We hit an unexpected snag. Please try again in a moment.",
+          primary:   { label: "Try Again",         action: "retry" },
+          secondary: { label: "Go to Dashboard",   href: "dashboard.html#/home" }
+        }
+      };
+
+      /* ============================================================
+         HELPERS
+      ============================================================ */
+      const $      = (id) => document.getElementById(id);
+      const params = new URLSearchParams(window.location.search);
+
+      function truncate(text, max) {
+        if (!text || typeof text !== "string") return "";
+        const t = text.trim();
+        return t.length > max ? t.slice(0, max - 1) + "…" : t;
       }
-    });
 
-    dashboardURL.hash =
-      "/" + safeRoute +
-      (query.toString() ? "?" + query.toString() : "");
+      function buildRetryUrl() {
+        const rawFrom = params.get("from") || "home";
+        const from    = SAFE_ROUTES.includes(rawFrom) ? rawFrom : "home";
 
-    window.location.assign(dashboardURL.href);
-  }
-
-  if (retryBtn) {
-    retryBtn.addEventListener("click", function () {
-      retryBtn.disabled = true;
-
-      if (isStandaloneErrorPage) {
-        // Return to the dashboard and retry the failed route.
-        openDashboardRoute(requestedRoute, retryParams);
-        return;
-      }
-
-      // When this error view is inside the dashboard, let router.js
-      // retry the original route without a full-page reload.
-      if (window.IKLensRouter) {
-        window.dispatchEvent(
-          new CustomEvent("iklens:retry-navigation", {
-            detail: {
-              route: requestedRoute,
-              params: retryParams
+        let retryParams = {};
+        const rawRetry  = params.get("retryParams");
+        if (rawRetry) {
+          try {
+            const parsed = JSON.parse(rawRetry);
+            if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+              retryParams = parsed;
             }
-          })
+          } catch (_) {}
+        }
+
+        // Only allow primitives to prevent stringification weirdness.
+        const safeParams = Object.fromEntries(
+          Object.entries(retryParams).filter(
+            ([, v]) => v !== undefined && v !== null && typeof v !== "object"
+          )
         );
 
-        window.setTimeout(function () {
-          retryBtn.disabled = false;
-        }, 1000);
+        const qs = Object.keys(safeParams).length
+          ? "?" + new URLSearchParams(safeParams).toString()
+          : "";
 
-        return;
+        return `dashboard.html#/${from}${qs}`;
       }
 
-      // Recover if the router is not available.
-      openDashboardRoute(requestedRoute, retryParams);
-    });
-  }
-
-  if (homeBtn) {
-    homeBtn.addEventListener("click", function (event) {
-      if (isStandaloneErrorPage) {
-        event.preventDefault();
-        openDashboardRoute("home");
+      function resolvePrimaryHref(cfg) {
+        if (cfg.primary.href) return cfg.primary.href;
+        if (cfg.primary.action === "retry") return buildRetryUrl();
+        return "dashboard.html#/home";
       }
-      // Inside the dashboard, router.js handles data-route="home".
-    });
-  }
-})();
-</script>
+
+      function resolveSecondaryHref(cfg) {
+        return cfg.secondary.href || "index.html";
+      }
+
+      /* ============================================================
+         RENDER
+      ============================================================ */
+      function render() {
+        const code = (params.get("code") || "").toUpperCase();
+        const base = PRESETS[code] || PRESETS.DEFAULT;
+
+        // Prefer the URL-supplied message (already friendly from dashboard-boot
+        // and router), fall back to the preset.
+        const urlMsg  = truncate(params.get("message") || "", MAX_MESSAGE_LEN);
+        const message = urlMsg || base.message;
+
+        // Icon + title + message
+        $("err-icon").textContent    = base.icon;
+        $("err-title").textContent   = base.title;
+        $("err-message").textContent = message;
+
+        // Error code chip
+        const codeEl = $("err-code");
+        if (code) {
+          codeEl.textContent = "CODE: " + code;
+          codeEl.hidden      = false;
+        }
+
+        // Primary CTA — always a real href, so right-click / cmd-click work.
+        const primary   = $("err-primary");
+        primary.href    = resolvePrimaryHref(base);
+        primary.textContent = base.primary.label;
+
+        // Secondary CTA
+        const secondary = $("err-secondary");
+        secondary.href  = resolveSecondaryHref(base);
+        secondary.textContent = base.secondary.label;
+
+        // Optional "Back" link — only if we know where they came from.
+        const backEl = $("err-back");
+        if (params.get("from")) {
+          backEl.hidden = false;
+          backEl.addEventListener("click", (event) => {
+            event.preventDefault();
+            if (window.history.length > 1) {
+              window.history.back();
+            } else {
+              window.location.assign("dashboard.html#/home");
+            }
+          });
+        }
+
+        // Document title
+        document.title = base.title + " — IKLens";
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", render, { once: true });
+      } else {
+        render();
+      }
+    })();
+  </script>
+</body>
+</html>

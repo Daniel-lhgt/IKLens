@@ -2,1153 +2,459 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <!-- Primary Meta Tags -->
-  <title>IKLens - Creative Visual & Prompt Studio</title>
-  <meta name="title" content="IKLens - Creative Visual & Prompt Studio">
-  <meta name="description" content="IKLens is a modern creative platform for crafting, discovering, and generating high-impact visual content with curated prompts and AI-powered tools.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#07090e">
+  <meta name="color-scheme" content="dark">
+
+  <!-- Primary Meta Tags -->
+  <title>IKLens - Copy-ready prompts for AI portraits, couples, kids &amp; flyers</title>
+  <meta name="title" content="IKLens - Copy-ready prompts for AI portraits, couples, kids &amp; flyers">
+  <meta name="description" content="Browse AI image prompts with example results for portraits, couples, kids and flyers. Copy a prompt and paste it into ChatGPT, Gemini, Leonardo, Midjourney and more.">
+
   <link rel="canonical" href="https://iklens.netlify.app/" />
   <link rel="icon" type="image/png" href="images/IKLens - AI Image prompting platform.png">
-  
-  <!-- Open Graph / Facebook / WhatsApp -->
+
+  <!-- Open Graph / Social -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://iklens.netlify.app/">
-  <meta property="og:title" content="IKLens - Creative Visual & Prompt Studio">
-  <meta property="og:description" content="IKLens is a modern creative platform for crafting, discovering, and generating high-impact visual content with curated prompts and AI-powered tools.">
-  <meta property="og:image" content="https://iklens.netlify.app/images/og-image.png">
-
-  <!-- Twitter -->
+  <meta property="og:title" content="IKLens - Copy-ready prompts for AI portraits, couples, kids &amp; flyers">
+  <meta property="og:description" content="Pick a prompt, copy it, and paste it into your favorite AI image tool.">
+  <meta property="og:image" content="https://iklens.netlify.app/images/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="IKLens, AI Prompt Studio: a glowing blue and purple light wave beside a portrait of a woman in a dark blazer">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:url" content="https://iklens.netlify.app/">
-  <meta name="twitter:title" content="IKLens - Creative Visual & Prompt Studio">
-  <meta name="twitter:description" content="IKLens is a modern creative platform for crafting, discovering, and generating high-impact visual content with curated prompts and AI-powered tools.">
-  <meta name="twitter:image" content="https://iklens.netlify.app/images/og-image.png">
+  <meta name="twitter:title" content="IKLens - Copy-ready prompts for AI portraits, couples, kids &amp; flyers">
+  <meta name="twitter:description" content="Pick a prompt, copy it, and paste it into your favorite AI image tool.">
+  <meta name="twitter:image" content="https://iklens.netlify.app/images/og-image.jpg">
 
-  <!-- Performance: Preconnect to Firebase and CDN -->
+  <!-- Performance: Preconnect -->
   <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-  
+  <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
+  <link rel="preconnect" href="https://api.cloudinary.com" crossorigin>
+
+  <!-- Shared Design System -->
+  <link rel="preload" as="style" href="js/design-system.css">
+  <link rel="stylesheet" href="js/design-system.css">
+
+  <!-- Module preload: warm the JS graph before the body parses -->
+  <link rel="modulepreload" href="js/firebase-config.js">
+  <link rel="modulepreload" href="js/router.js">
+  <link rel="modulepreload" href="js/app.js">
+
   <style>
-    /* ==========================================
-       IKLENS DESIGN SYSTEM & MODERN RESET
-       ========================================== */
-    :root {
-      --bg-dark: #07090e;
-      --bg-surface: #0f131c;
-      --bg-surface-elevated: #161c28;
-      --bg-glass: rgba(15, 19, 28, 0.75);
-      --bg-glass-strong: rgba(15, 19, 28, 0.88);
-      --border-subtle: rgba(255, 255, 255, 0.08);
-      --border-soft: rgba(255, 255, 255, 0.12);
-      --border-glow: rgba(0, 210, 255, 0.35);
-      
-      --text-primary: #f3f5f9;
-      --text-secondary: #94a3b8;
-      --text-muted: #64748b;
-      --text-inverse: #ffffff;
-      
-      --accent-cyan: #00d2ff;
-      --accent-purple: #8a2be2;
-      --accent-pink: #f43f5e;
-      
-      --gradient-primary: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
-      --gradient-primary-soft: linear-gradient(135deg, rgba(0,210,255,0.85), rgba(138,43,226,0.9));
-      --gradient-glow: linear-gradient(135deg, rgba(0,210,255,0.18), rgba(138,43,226,0.18));
-      --gradient-overlay-dark: linear-gradient(180deg, transparent 35%, rgba(7, 9, 14, 0.92) 100%);
-      
-      --radius-sm: 8px;
-      --radius-md: 14px;
-      --radius-lg: 22px;
-      --radius-full: 9999px;
-      
-      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.25);
-      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.32);
-      --shadow-lg: 0 16px 36px rgba(0, 0, 0, 0.45);
-      --shadow-glow: 0 0 25px rgba(0, 210, 255, 0.2);
-      --shadow-glow-strong: 0 0 40px rgba(0, 210, 255, 0.35);
-      
-      --transition-fast: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-      --transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      --transition-bounce: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-      --max-width: 1240px;
-    }
-
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-      color-scheme: dark;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 
-                   'Helvetica Neue', Arial, sans-serif;
-      background-color: var(--bg-dark);
-      color: var(--text-primary);
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    body {
-      overflow-x: hidden;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    img {
-      max-width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button {
-      font: inherit;
-      cursor: pointer;
-      border: none;
-      background: none;
-    }
-
-    ul { list-style: none; }
-
-    :focus-visible {
-      outline: 2px solid var(--accent-cyan);
-      outline-offset: 2px;
-    }
-
-    /* ==========================================
-       SPLASH SCREEN
-       ========================================== */
-    #splash-screen {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      background-color: var(--bg-dark);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
-                  visibility 0.6s ease,
-                  transform 0.5s ease;
-    }
-
-    .splash-content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 24px;
-      animation: splashPulse 1.8s ease-in-out infinite alternate;
-    }
-
-    .splash-logo {
-      width: 110px;
-      height: 110px;
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-glow);
-      object-fit: contain;
-    }
-
-    .splash-loader {
-      width: 40px;
-      height: 40px;
-      border: 3px solid var(--border-subtle);
-      border-top-color: var(--accent-cyan);
-      border-right-color: var(--accent-purple);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    @keyframes splashPulse {
-      from { transform: scale(0.96); opacity: 0.85; }
-      to { transform: scale(1.04); opacity: 1; }
-    }
-
-    body.loaded #splash-screen {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      transform: scale(1.05);
-    }
-
-    /* ==========================================
-       MAIN APP CONTAINER
-       ========================================== */
-    #app-landing {
-      opacity: 0;
-      transform: translateY(18px);
-      transition: opacity 0.7s ease 0.15s, transform 0.7s ease 0.15s;
-    }
-
-    body.loaded #app-landing {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
     .container {
-      max-width: var(--max-width);
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 0 24px;
+      padding: 0 var(--space-5);
       width: 100%;
     }
 
-    /* ==========================================
-       NAVIGATION BAR
-       ========================================== */
+    /* NAVIGATION */
     .navbar {
       position: sticky;
       top: 0;
-      z-index: 1000;
-      background: var(--bg-glass);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border-subtle);
-      padding: 16px 0;
-      transition: background 0.3s ease, box-shadow 0.3s ease;
+      z-index: 100;
+      background: transparent;
+      border-bottom: 1px solid transparent;
+      padding: var(--space-4) 0;
+      transition: all var(--transition-smooth);
     }
-
     .navbar.scrolled {
-      background: var(--bg-glass-strong);
-      box-shadow: var(--shadow-md);
-      border-bottom-color: var(--border-soft);
+      background: rgba(7, 9, 14, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom-color: var(--border-subtle);
+      padding: var(--space-3) 0;
     }
-
-    .nav-container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
+    .nav-container { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); }
     .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 700;
-      font-size: 1.25rem;
-      letter-spacing: -0.02em;
-      transition: transform var(--transition-fast);
+      display: flex; align-items: center; gap: var(--space-3);
+      font-weight: 800; font-size: 1.25rem;
+      color: var(--text-primary); text-decoration: none;
+      transition: opacity var(--transition-fast);
     }
+    .brand:hover { opacity: 0.9; }
+    .brand-logo { width: 32px; height: 32px; border-radius: var(--radius-sm); }
+    .nav-links { display: none; align-items: center; gap: var(--space-5); margin-left: auto; margin-right: var(--space-4); }
+    .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.95rem; font-weight: 500; }
+    .nav-links a:hover { color: var(--text-primary); }
+    @media (min-width: 760px) { .nav-links { display: flex; } }
+    .nav-actions { display: flex; align-items: center; gap: var(--space-3); }
 
-    .brand:hover { transform: scale(1.02); }
-
-    .brand-logo {
-      width: 36px;
-      height: 36px;
-      border-radius: var(--radius-sm);
-      object-fit: cover;
+    /* HERO */
+    .hero-section { padding: var(--space-10) 0; position: relative; overflow: hidden; }
+    .hero-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-8); align-items: center; }
+    @media (min-width: 900px) {
+      .hero-section { padding: var(--space-12) 0; }
+      .hero-grid { grid-template-columns: 1fr 1fr; gap: var(--space-10); }
     }
+    .hero-content { text-align: center; }
+    @media (min-width: 900px) { .hero-content { text-align: left; } }
 
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 32px;
-      list-style: none;
-    }
-
-    .nav-link {
-      font-size: 0.95rem;
-      color: var(--text-secondary);
-      font-weight: 500;
-      transition: color var(--transition-fast), transform var(--transition-fast);
-      position: relative;
-    }
-
-    .nav-link::after {
-      content: '';
-      position: absolute;
-      bottom: -4px;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: var(--gradient-primary);
-      border-radius: 2px;
-      transition: width var(--transition-fast);
-    }
-
-    .nav-link:hover, .nav-link:focus-visible {
-      color: var(--text-primary);
-    }
-
-    .nav-link:hover::after, .nav-link:focus-visible::after {
-      width: 100%;
-    }
-
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    /* Mobile Menu Toggle */
-    .menu-toggle {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      width: 28px;
-      height: 28px;
-      padding: 4px;
-    }
-
-    .menu-toggle span {
-      width: 100%;
-      height: 2px;
-      background: var(--text-primary);
-      border-radius: 2px;
-      transition: all var(--transition-fast);
-      transform-origin: center;
-    }
-
-    .menu-open .menu-toggle span:nth-child(1) { transform: rotate(45deg) translateY(7px); }
-    .menu-open .menu-toggle span:nth-child(2) { opacity: 0; }
-    .menu-open .menu-toggle span:nth-child(3) { transform: rotate(-45deg) translateY(-7px); }
-
-    /* ==========================================
-       BUTTONS & BADGES
-       ========================================== */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 24px;
-      border-radius: var(--radius-full);
-      font-weight: 600;
-      font-size: 0.95rem;
-      transition: all var(--transition-fast);
-      white-space: nowrap;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .btn-primary {
-      background: var(--gradient-primary);
-      color: var(--text-inverse);
-      box-shadow: var(--shadow-glow);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px) scale(1.02);
-      box-shadow: var(--shadow-glow-strong);
-    }
-
-    .btn-primary:active {
-      transform: translateY(0) scale(0.98);
-    }
-
-    .btn-secondary {
-      background: var(--bg-surface-elevated);
-      color: var(--text-primary);
+    .badge-pill {
+      display: inline-flex; align-items: center;
+      padding: 6px 16px;
+      border-radius: var(--radius-pill);
+      background: var(--bg-elevated);
       border: 1px solid var(--border-subtle);
+      color: var(--brand-cyan);
+      font-size: 0.85rem; font-weight: 600;
+      margin-bottom: var(--space-5);
     }
-
-    .btn-secondary:hover {
-      border-color: rgba(255, 255, 255, 0.2);
-      background: rgba(255, 255, 255, 0.06);
-      transform: translateY(-1px);
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 18px;
-      border-radius: var(--radius-full);
-      font-size: 0.825rem;
-      font-weight: 600;
-      background: var(--bg-surface-elevated);
-      border: 1px solid var(--border-subtle);
-      color: var(--accent-cyan);
-      margin-bottom: 24px;
-      backdrop-filter: blur(8px);
-    }
-
-    /* ==========================================
-       HERO SECTION
-       ========================================== */
-    .hero-section {
-      padding: 80px 0 70px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-section::before {
-      content: '';
-      position: absolute;
-      top: -20%;
-      right: -10%;
-      width: 60%;
-      height: 120%;
-      background: radial-gradient(ellipse at top right, rgba(0, 210, 255, 0.12), transparent 60%);
-      pointer-events: none;
-    }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 60px;
-      align-items: center;
-      position: relative;
-    }
-
     .hero-title {
-      font-size: clamp(2.5rem, 5vw, 3.8rem);
-      line-height: 1.08;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      margin-bottom: 24px;
+      font-size: clamp(2.1rem, 5vw, 3.5rem);
+      line-height: 1.1; font-weight: 800; letter-spacing: -0.03em;
+      margin-bottom: var(--space-4);
+      color: var(--text-primary);
     }
-
-    .text-gradient {
-      background: var(--gradient-primary);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 2px 4px rgba(0, 210, 255, 0.15));
-    }
-
     .hero-description {
-      font-size: 1.125rem;
+      font-size: clamp(1rem, 2vw, 1.15rem);
       color: var(--text-secondary);
-      margin-bottom: 36px;
-      max-width: 520px;
-      line-height: 1.7;
+      margin: 0 auto var(--space-6);
+      max-width: 520px; line-height: 1.6;
     }
+    @media (min-width: 900px) { .hero-description { margin-inline: 0; } }
+    .hero-cta-group { display: flex; align-items: center; justify-content: center; gap: var(--space-3); flex-wrap: wrap; }
+    @media (min-width: 900px) { .hero-cta-group { justify-content: flex-start; } }
+    .hero-note { margin-top: var(--space-4); font-size: 0.9rem; color: var(--text-secondary); }
 
-    .hero-cta-group {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .hero-composition {
-      position: relative;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-    }
-
+    .hero-composition { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
     .hero-card {
-      position: relative;
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      border: 1px solid var(--border-subtle);
-      background: var(--bg-surface);
-      box-shadow: var(--shadow-lg);
-      transition: all var(--transition-smooth);
+      position: relative; border-radius: var(--radius-md); overflow: hidden;
+      border: 1px solid var(--border-subtle); background: var(--bg-surface);
+      box-shadow: var(--shadow-md); aspect-ratio: 4/5;
     }
-
-    .hero-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at center, transparent 60%, rgba(0,0,0,0.4));
-      z-index: 1;
-      opacity: 0;
-      transition: opacity var(--transition-smooth);
-    }
-
-    .hero-card:hover {
-      transform: translateY(-6px) scale(1.02);
-      border-color: var(--border-glow);
-      box-shadow: 0 22px 45px rgba(0, 0, 0, 0.55);
-    }
-
-    .hero-card:hover::before { opacity: 1; }
-
-    .hero-card img {
-      width: 100%;
-      height: 260px;
-      object-fit: cover;
-      transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .hero-card:hover img {
-      transform: scale(1.08);
-    }
-
-    .hero-card-featured {
-      grid-column: span 2;
-    }
-
-    .hero-card-featured img {
-      height: 320px;
-    }
-
+    .hero-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .hero-card-featured { grid-column: span 2; aspect-ratio: 16/9; }
     .hero-card-overlay {
-      position: absolute;
-      inset: 0;
-      background: var(--gradient-overlay-dark);
-      display: flex;
-      align-items: flex-end;
-      padding: 20px;
-      font-size: 0.875rem;
-      font-weight: 500;
-      z-index: 2;
-      transition: padding var(--transition-fast);
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(7,9,14,0.9) 0%, transparent 60%);
+      display: flex; align-items: flex-end;
+      padding: var(--space-4);
+      color: #fff; font-size: 0.9rem; font-weight: 600;
     }
 
-    .hero-card:hover .hero-card-overlay {
-      padding-bottom: 24px;
-    }
-
-    /* ==========================================
-       FEATURE & SHOWCASE SECTIONS
-       ========================================== */
-    .section {
-      padding: 90px 0;
-      border-top: 1px solid var(--border-subtle);
-    }
-
-    .section-header {
-      text-align: center;
-      max-width: 640px;
-      margin: 0 auto 60px;
-    }
-
+    /* SECTIONS */
+    .section { padding: var(--space-10) 0; border-top: 1px solid var(--border-subtle); scroll-margin-top: 60px; }
+    @media (min-width: 900px) { .section { padding: var(--space-12) 0; } }
+    .section-header { text-align: center; max-width: 620px; margin: 0 auto var(--space-8); }
     .section-title {
-      font-size: 2.25rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin-bottom: 12px;
+      font-size: clamp(1.7rem, 4vw, 2.4rem);
+      font-weight: 800; letter-spacing: -0.02em; margin-bottom: var(--space-3);
     }
+    .section-subtitle { color: var(--text-secondary); font-size: 1.05rem; line-height: 1.6; }
 
-    .section-subtitle {
-      color: var(--text-secondary);
-      font-size: 1.05rem;
-      line-height: 1.6;
-    }
-
-    /* Showcase Grid */
-    .showcase-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 28px;
-    }
-
-    .showcase-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      transition: all var(--transition-smooth);
-    }
-
-    .showcase-card:hover {
-      transform: translateY(-8px);
-      border-color: var(--border-glow);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45), 0 0 25px rgba(0, 210, 255, 0.1);
-    }
-
-    .showcase-img-wrapper {
-      height: 280px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .showcase-img-wrapper img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.6s ease;
-    }
-
-    .showcase-card:hover .showcase-img-wrapper img {
-      transform: scale(1.06);
-    }
-
-    .showcase-body {
-      padding: 22px;
-    }
-
-    .showcase-tag {
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--accent-cyan);
-      margin-bottom: 8px;
-      display: inline-block;
-    }
-
-    .showcase-card-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-
-    .showcase-card-desc {
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-      line-height: 1.6;
-    }
-
-    /* Workflow Cards */
-    .workflow-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 30px;
-    }
-
-    .workflow-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      padding: 36px 28px;
-      position: relative;
-      transition: all var(--transition-smooth);
-    }
-
-    .workflow-card:hover {
-      border-color: var(--border-soft);
-      transform: translateY(-4px);
-      background: linear-gradient(180deg, var(--bg-surface-elevated), var(--bg-surface));
-    }
-
-    .workflow-step {
-      font-size: 2.5rem;
-      font-weight: 800;
-      color: rgba(255, 255, 255, 0.06);
-      position: absolute;
-      top: 16px;
-      right: 20px;
-      transition: color var(--transition-fast);
-    }
-
-    .workflow-card:hover .workflow-step {
-      color: rgba(0, 210, 255, 0.15);
-    }
-
-    .workflow-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin-bottom: 12px;
-    }
-
-    .workflow-desc {
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-      line-height: 1.65;
-    }
-
-    /* CTA Banner */
-    .cta-banner {
-      background: var(--gradient-glow);
-      border: 1px solid var(--border-glow);
+    /* CATEGORIES */
+    .category-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); }
+    @media (min-width: 900px) { .category-grid { grid-template-columns: repeat(5, 1fr); } }
+    .category-card {
+      position: relative; display: block;
+      aspect-ratio: 3/4; overflow: hidden;
       border-radius: var(--radius-lg);
-      padding: 64px 40px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .cta-banner::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: var(--gradient-primary);
-      opacity: 0.6;
-    }
-
-    .cta-title {
-      font-size: 2.25rem;
-      font-weight: 700;
-      margin-bottom: 16px;
-    }
-
-    .cta-desc {
-      color: var(--text-secondary);
-      max-width: 540px;
-      margin: 0 auto 32px;
-      font-size: 1.05rem;
-      line-height: 1.6;
-    }
-
-    /* Footer */
-    .footer {
-      border-top: 1px solid var(--border-subtle);
-      padding: 40px 0;
-      margin-top: auto;
+      border: 1px solid var(--border-subtle);
       background: var(--bg-surface);
+      color: inherit; text-decoration: none;
+      transition: border-color var(--transition-smooth);
+    }
+    .category-card:hover { border-color: var(--border-hover); }
+    .category-card img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+    .category-card-body {
+      position: absolute; inset: auto 0 0 0;
+      padding: var(--space-6) var(--space-4) var(--space-4);
+      background: linear-gradient(to top, rgba(7,9,14,0.95) 0%, rgba(7,9,14,0.7) 55%, transparent 100%);
+    }
+    .category-card-title { font-size: 1.1rem; font-weight: 700; color: #fff; }
+    .category-card-desc { font-size: 0.85rem; color: #cbd5e1; line-height: 1.4; margin-top: 2px; }
+    @media (max-width: 899px) {
+      .category-card:last-child:nth-child(odd) { grid-column: span 2; aspect-ratio: 2/1; }
     }
 
-    .footer-container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 20px;
+    /* HOW IT WORKS */
+    .workflow-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--space-5); }
+    .workflow-card {
+      background: var(--bg-surface); border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg); padding: var(--space-6); position: relative;
     }
+    .workflow-step { font-size: 2.5rem; font-weight: 800; color: rgba(0, 210, 255, 0.18); line-height: 1; margin-bottom: var(--space-3); }
+    .workflow-title { font-size: 1.2rem; font-weight: 700; margin-bottom: var(--space-2); }
+    .workflow-desc { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; }
 
-    .footer-text {
-      color: var(--text-muted);
-      font-size: 0.875rem;
+    /* FAQ */
+    .faq-list { max-width: 720px; margin: 0 auto; display: grid; gap: var(--space-3); }
+    .faq-item { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); }
+    .faq-item summary {
+      list-style: none; cursor: pointer;
+      padding: var(--space-4) var(--space-5);
+      font-weight: 600; font-size: 1rem;
+      display: flex; justify-content: space-between; align-items: center; gap: var(--space-4);
     }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary::after { content: "+"; font-size: 1.4rem; color: var(--brand-cyan); line-height: 1; flex: none; }
+    .faq-item[open] summary::after { content: "\2212"; }
+    .faq-item p { padding: 0 var(--space-5) var(--space-5); color: var(--text-secondary); line-height: 1.65; font-size: 0.98rem; }
 
-    /* ==========================================
-       RESPONSIVE DESIGN
-       ========================================== */
-    @media (max-width: 992px) {
-      .hero-grid {
-        grid-template-columns: 1fr;
-        gap: 48px;
-      }
-      .hero-content {
-        text-align: center;
-      }
-      .hero-description {
-        margin: 0 auto 32px;
-      }
-      .hero-cta-group {
-        justify-content: center;
-      }
-      .workflow-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-      }
-      .section {
-        padding: 70px 0;
-      }
+    /* CTA */
+    .cta-banner {
+      background: linear-gradient(135deg, rgba(138,43,226,0.1), rgba(0,210,255,0.1));
+      border: 1px solid var(--border-hover); border-radius: var(--radius-xl);
+      padding: var(--space-10) var(--space-5); text-align: center;
     }
+    .cta-title { font-size: clamp(1.7rem, 4vw, 2.4rem); font-weight: 800; margin-bottom: var(--space-3); }
+    .cta-desc { color: var(--text-secondary); max-width: 520px; margin: 0 auto var(--space-6); font-size: 1.05rem; line-height: 1.6; }
 
-    @media (max-width: 768px) {
-      .nav-links {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        flex-direction: column;
-        gap: 0;
-        background: var(--bg-glass-strong);
-        backdrop-filter: blur(20px);
-        border-bottom: 1px solid var(--border-subtle);
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s ease;
-      }
-      .menu-open .nav-links {
-        max-height: 300px;
-      }
-      .nav-link {
-        display: block;
-        padding: 16px 24px;
-        width: 100%;
-      }
-      .nav-link::after { display: none; }
-      .menu-toggle {
-        display: flex;
-      }
-      .hero-composition {
-        grid-template-columns: 1fr;
-      }
-      .hero-card-featured {
-        grid-column: span 1;
-      }
-      .hero-card img,
-      .hero-card-featured img {
-        height: 220px;
-      }
-      .workflow-grid {
-        grid-template-columns: 1fr;
-      }
-      .cta-banner {
-        padding: 40px 24px;
-      }
-      .cta-title {
-        font-size: 1.75rem;
-      }
-      .footer-container {
-        flex-direction: column;
-        text-align: center;
-      }
-      .container {
-        padding: 0 20px;
-      }
-      .hero-section {
-        padding: 60px 0 50px;
-      }
-      .section {
-        padding: 50px 0;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .nav-actions .btn-secondary { display: none; }
-      .badge { margin-bottom: 16px; }
-      .hero-title { font-size: 2rem; }
-      .showcase-grid { grid-template-columns: 1fr; }
-    }
-
-    /* Accessibility */
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-      }
-    }
+    /* FOOTER */
+    .footer { border-top: 1px solid var(--border-subtle); padding: var(--space-6) 0; background: var(--bg-surface); }
+    .footer-container { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-4); }
+    .footer-links { display: flex; gap: var(--space-5); flex-wrap: wrap; }
+    .footer-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; }
+    .footer-links a:hover { color: var(--text-primary); }
+    .footer-text { color: var(--text-secondary); font-size: 0.85rem; }
   </style>
 </head>
 <body>
-  <!-- SPLASH SCREEN -->
-  <div id="splash-screen" aria-label="Loading IKLens">
-    <div class="splash-content">
-      <img src="images/IKLens - AI Image prompting platform.png" alt="IKLens Logo" class="splash-logo" width="110" height="110">
-      <div class="splash-loader" aria-hidden="true"></div>
-    </div>
-  </div>
 
-  <!-- MAIN CONTENT -->
   <div id="app-landing">
-    
-    <!-- NAVIGATION -->
+
+    <!-- NAVBAR -->
     <header class="navbar" id="navbar">
       <div class="container nav-container">
         <a href="index.html" class="brand" aria-label="IKLens Home">
-          <img src="images/IKLens - AI Image prompting platform.png" alt="IKLens Logo" class="brand-logo" width="36" height="36">
+          <img src="images/IKLens - AI Image prompting platform.png" alt="" class="brand-logo" width="32" height="32" />
           <span>IKLens</span>
         </a>
-        
-        <ul class="nav-links">
-          <li><a href="#showcase" class="nav-link">Showcase</a></li>
-          <li><a href="#workflow" class="nav-link">How It Works</a></li>
-          <li><a href="#features" class="nav-link">Features</a></li>
-        </ul>
-        
+
+        <nav class="nav-links" aria-label="Page sections">
+          <a href="#categories">Categories</a>
+          <a href="#how">How it works</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+
         <div class="nav-actions">
-          <a href="login.html" class="btn btn-secondary">Sign In</a>
-          <a href="signup.html" class="btn btn-primary">Get Started</a>
-          <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false">
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
+          <a href="login.html" class="btn btn-ghost">Sign in</a>
+          <a href="signup.html" class="btn btn-primary">Sign up</a>
         </div>
       </div>
     </header>
 
-    <!-- HERO SECTION -->
-    <section class="hero-section">
+    <main>
+    <!-- HERO -->
+    <section class="hero-section noise-overlay">
       <div class="container hero-grid">
         <div class="hero-content">
-          <div class="badge">
-            <span>✨ Creative Visual Studio</span>
-          </div>
-          <h1 class="hero-title">
-            Craft & Discover High-Impact <span class="text-gradient">Visual Prompts</span>
-          </h1>
+          <div class="badge-pill">Prompts for portraits, couples, kids &amp; flyers</div>
+          <h1 class="hero-title">Copy-ready prompts for stunning AI portraits and flyers</h1>
           <p class="hero-description">
-            IKLens provides curated creative prompts and visual styles to accelerate your creative workflow — built for visual thinkers, digital creators, and storytellers.
+            Browse prompts with example results, copy the one you like, and paste it into ChatGPT, Gemini, or your favorite AI image tool.
           </p>
           <div class="hero-cta-group">
-            <a href="signup.html" class="btn btn-primary">Open AI Studio</a>
-            <a href="login.html" class="btn btn-secondary">Explore Gallery</a>
+            <a href="signup.html" class="btn btn-primary">Browse prompts</a>
+            <a href="#categories" class="btn btn-ghost">See examples</a>
           </div>
+          <p class="hero-note">Works with ChatGPT, Gemini, Leonardo, Midjourney, Claude and Playground.</p>
         </div>
-        
+
         <div class="hero-composition">
           <div class="hero-card hero-card-featured">
-            <img src="images/Photorealistic%20Caf%C3%A9%20Portraits.png" alt="Editorial Workspace Aesthetics — warm lit café workspace" loading="lazy">
-            <div class="hero-card-overlay">
-              <span>Editorial Workspace Aesthetics</span>
-            </div>
+            <img src="images/Gemini_Generated_Image_k46mg6k46mg6k46m.jpg" alt="AI portrait of a smiling man in a sunlit cafe" width="1408" height="768" fetchpriority="high" />
+            <div class="hero-card-overlay"><span>Cafe portrait</span></div>
           </div>
           <div class="hero-card">
-            <img src="images/1791184348754.jpg" alt="Cinematic beach composition — golden hour coastal scene" loading="lazy">
-            <div class="hero-card-overlay">
-              <span>Cinematic Lighting</span>
-            </div>
+            <img src="images/1791184348754.jpg" alt="AI portrait of a woman with a notebook and coffee in a bright library" width="848" height="1264" />
+            <div class="hero-card-overlay"><span>Editorial portrait</span></div>
           </div>
           <div class="hero-card">
-            <img src="images/grok_image_1791184030387.jpg" alt="Modern streetwear fashion design" loading="lazy">
-            <div class="hero-card-overlay">
-              <span>Modern Streetwear</span>
-            </div>
+            <img src="images/grok_image_1791184030387.jpg" alt="AI portrait of a woman in a green dress walking down a sunlit street" width="768" height="1152" />
+            <div class="hero-card-overlay"><span>Street style</span></div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SHOWCASE -->
-    <section id="showcase" class="section">
+    <!-- CATEGORIES -->
+    <section id="categories" class="section">
       <div class="container">
         <div class="section-header">
-          <h2 class="section-title">Curated Creative Collections</h2>
-          <p class="section-subtitle">Handcrafted prompt styles tailored for high-end photography, design, and digital art production.</p>
+          <h2 class="section-title">Start with a category</h2>
+          <p class="section-subtitle">Every prompt comes with an example image, so you can see what to expect before you copy it.</p>
         </div>
-        <div class="showcase-grid">
-          <article class="showcase-card">
-            <div class="showcase-img-wrapper">
-              <img src="images/Gemini_Generated_Image_k46mg6k46mg6k46m.jpg" alt="Warm ambient studio portrait lighting" loading="lazy">
+        <div class="category-grid">
+          <a href="signup.html" class="category-card">
+            <img src="images/category-male.jpg" alt="AI portrait of a man in a blue sweater and cap on a shopping street" loading="lazy" decoding="async" />
+            <div class="category-card-body">
+              <div class="category-card-title">Male</div>
+              <div class="category-card-desc">Cafe, street and studio looks</div>
             </div>
-            <div class="showcase-body">
-              <div class="showcase-tag">Portrait Lighting</div>
-              <h3 class="showcase-card-title">Warm Ambient Studio</h3>
-              <p class="showcase-card-desc">Natural depth of field with rich golden-hour interior lighting setups.</p>
+          </a>
+          <a href="signup.html" class="category-card">
+            <img src="images/category-female.jpg" alt="AI portrait of a woman in a cream sweater sitting in an armchair" loading="lazy" decoding="async" />
+            <div class="category-card-body">
+              <div class="category-card-title">Female</div>
+              <div class="category-card-desc">Lifestyle and editorial portraits</div>
             </div>
-          </article>
-          <article class="showcase-card">
-            <div class="showcase-img-wrapper">
-              <img src="images/1789553538021.jpg" alt="Vibrant cultural character concept art" loading="lazy">
+          </a>
+          <a href="signup.html" class="category-card">
+            <img src="images/category-kids.jpg" alt="AI image of four children running across a sunny park" loading="lazy" decoding="async" />
+            <div class="category-card-body">
+              <div class="category-card-title">Kids</div>
+              <div class="category-card-desc">Playful outdoor scenes</div>
             </div>
-            <div class="showcase-body">
-              <div class="showcase-tag">Stylized Art</div>
-              <h3 class="showcase-card-title">Vivid Cultural Patterns</h3>
-              <p class="showcase-card-desc">Expressive character concept art with intricate vector and fabric details.</p>
+          </a>
+          <a href="signup.html" class="category-card">
+            <img src="images/category-couple.jpg" alt="AI portrait of a couple in white wedding outfits holding a bouquet" loading="lazy" decoding="async" />
+            <div class="category-card-body">
+              <div class="category-card-title">Couples</div>
+              <div class="category-card-desc">Wedding and pair portraits</div>
             </div>
-          </article>
-          <article class="showcase-card">
-            <div class="showcase-img-wrapper">
-              <img src="images/1783962561911.png" alt="Moody cinematic interior scene" loading="lazy">
+          </a>
+          <a href="signup.html" class="category-card">
+            <img src="images/category-flyer.jpg" alt="AI-designed birthday flyer with a man in a maroon jacket and red roses" loading="lazy" decoding="async" />
+            <div class="category-card-body">
+              <div class="category-card-title">Flyers</div>
+              <div class="category-card-desc">Birthday and event posters</div>
             </div>
-            <div class="showcase-body">
-              <div class="showcase-tag">Cinematic Interior</div>
-              <h3 class="showcase-card-title">Dramatic Atmosphere</h3>
-              <p class="showcase-card-desc">Low-key directional sunlight through windows into classical interior spaces.</p>
-            </div>
-          </article>
-          <article class="showcase-card">
-            <div class="showcase-img-wrapper">
-              <img src="images/1783962466641.png" alt="Urban fashion lookbook with natural sunlight" loading="lazy">
-            </div>
-            <div class="showcase-body">
-              <div class="showcase-tag">Commercial Fashion</div>
-              <h3 class="showcase-card-title">Urban Sunlight Lookbook</h3>
-              <p class="showcase-card-desc">Crisp outdoor street backdrop featuring natural contrast and realistic wardrobe textures.</p>
-            </div>
-          </article>
-          <article class="showcase-card">
-            <div class="showcase-img-wrapper">
-              <img src="images/1789853625232.jpg" alt="Artistic double exposure landscape portrait" loading="lazy">
-            </div>
-            <div class="showcase-body">
-              <div class="showcase-tag">Creative Effects</div>
-              <h3 class="showcase-card-title">Double Exposure Landscape</h3>
-              <p class="showcase-card-desc">Seamless blend of subject silhouette and dramatic natural horizon visual prompts.</p>
-            </div>
-          </article>
-          <article class="showcase-card">
-            <div class="showcase-img-wrapper">
-              <img src="images/1791184131980.jpg" alt="Clean monochromatic studio portrait" loading="lazy">
-            </div>
-            <div class="showcase-body">
-              <div class="showcase-tag">Studio Minimal</div>
-              <h3 class="showcase-card-title">Focused Monochromatic Studio</h3>
-              <p class="showcase-card-desc">Clean background setup emphasizing high sharpness and clarity.</p>
-            </div>
-          </article>
+          </a>
         </div>
       </div>
     </section>
 
-    <!-- WORKFLOW -->
-    <section id="workflow" class="section">
+    <!-- HOW IT WORKS -->
+    <section id="how" class="section">
       <div class="container">
         <div class="section-header">
-          <h2 class="section-title">Designed for Seamless Workflows</h2>
-          <p class="section-subtitle">Three simple steps to studio-grade visual outputs — every time.</p>
+          <h2 class="section-title">How it works</h2>
+          <p class="section-subtitle">IKLens gives you the prompt. Your AI tool makes the image.</p>
         </div>
         <div class="workflow-grid">
           <div class="workflow-card">
-            <div class="workflow-step">01</div>
-            <h3 class="workflow-title">Browse Curated Styles</h3>
-            <p class="workflow-desc">Explore hundreds of battle-tested visual prompt setups designed by creative professionals.</p>
+            <div class="workflow-step" aria-hidden="true">1</div>
+            <h3 class="workflow-title">Pick a prompt</h3>
+            <p class="workflow-desc">Browse by category and choose a prompt whose example result looks like what you want.</p>
           </div>
           <div class="workflow-card">
-            <div class="workflow-step">02</div>
-            <h3 class="workflow-title">Customize & Enhance</h3>
-            <p class="workflow-desc">Refine parameters, aspect ratios, and lighting modifiers — all in one intuitive studio.</p>
+            <div class="workflow-step" aria-hidden="true">2</div>
+            <h3 class="workflow-title">Copy it</h3>
+            <p class="workflow-desc">Reveal the full prompt and copy it in one tap. Save favorites to find them again.</p>
           </div>
           <div class="workflow-card">
-            <div class="workflow-step">03</div>
-            <h3 class="workflow-title">Generate High-Impact Output</h3>
-            <p class="workflow-desc">High-resolution assets ready for presentations, client pitches, and deployment.</p>
+            <div class="workflow-step" aria-hidden="true">3</div>
+            <h3 class="workflow-title">Paste it into your AI tool</h3>
+            <p class="workflow-desc">Open ChatGPT, Gemini or another tool straight from IKLens. Your prompt is already copied, so just paste.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- FINAL CTA -->
-    <section id="features" class="section">
+    <!-- FAQ -->
+    <section id="faq" class="section">
       <div class="container">
-        <div class="cta-banner">
-          <h2 class="cta-title">Elevate Your Visual Capabilities</h2>
-          <p class="cta-desc">Join creators using IKLens to streamline image generation and unlock professional creative output.</p>
-          <a href="signup.html" class="btn btn-primary">Start Creating Now</a>
+        <div class="section-header">
+          <h2 class="section-title">Common questions</h2>
+        </div>
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary>Does IKLens generate the images?</summary>
+            <p>No. IKLens gives you the prompt. You paste it into an AI image tool such as ChatGPT or Gemini, and that tool creates the image.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Which AI tools can I use the prompts with?</summary>
+            <p>You can open ChatGPT, Gemini, Leonardo, Claude, Midjourney and Playground from IKLens. The prompt is text, so it also works in other tools that accept one.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Do I need an account?</summary>
+            <p>Yes. You sign up to browse and copy prompts, save favorites, and submit prompts of your own.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Who owns the images I create?</summary>
+            <p>You do. IKLens doesn't claim ownership of what you create. Check the terms of the AI tool you use as well.</p>
+          </details>
         </div>
       </div>
     </section>
+
+    <!-- CTA -->
+    <section class="section">
+      <div class="container">
+        <div class="cta-banner">
+          <h2 class="cta-title">Find your next prompt</h2>
+          <p class="cta-desc">Browse portrait, couple, kids and flyer prompts, copy one, and try it in your favorite AI tool.</p>
+          <a href="signup.html" class="btn btn-primary">Browse prompts</a>
+        </div>
+      </div>
+    </section>
+    </main>
 
     <!-- FOOTER -->
     <footer class="footer">
       <div class="container footer-container">
         <a href="index.html" class="brand">
-          <img src="images/IKLens - AI Image prompting platform.png" alt="IKLens Logo" class="brand-logo" width="36" height="36">
+          <img src="images/IKLens - AI Image prompting platform.png" alt="" class="brand-logo" width="32" height="32" />
           <span>IKLens</span>
         </a>
-        <p class="footer-text">&copy; 2026 IKLens Visual Platform. All rights reserved.</p>
+        <nav class="footer-links" aria-label="Footer">
+          <a href="pages/about.html">About</a>
+          <a href="pages/privacy.html">Privacy</a>
+          <a href="pages/terms.html">Terms</a>
+          <a href="pages/contact.html">Contact</a>
+        </nav>
+        <p class="footer-text">&copy; 2026 IKLens. All rights reserved.</p>
       </div>
     </footer>
   </div>
-<script type="module">
-  import { auth } from "./js/firebase-config.js";
-  import { onAuthStateChanged } from
-    "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
 
-  const MIN_SPLASH_TIME = 400;
-  const AUTH_TIMEOUT = 12000;
+  <!-- ============================================================
+       NAVBAR SCROLL (unchanged)
+       ============================================================ -->
+  <script>
+    (function () {
+      const navbar = document.getElementById("navbar");
+      if (!navbar) return;
+      const update = () => navbar.classList.toggle("scrolled", window.scrollY > 20);
+      update();
+      window.addEventListener("scroll", update, { passive: true });
+    })();
+  </script>
 
-  let authHandled = false;
-  let redirecting = false;
-  let authTimeoutId;
+  <!-- ============================================================
+       AUTH REDIRECT (parallel, capped, never blocks paint)
+       ============================================================ -->
+  <script type="module">
+    import { auth } from "./js/firebase-config.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
 
-  const splashStartedAt = Date.now();
+    const SPLASH_CAP_MS = 600;
+    let redirected = false;
 
-  function showLandingPage() {
-    document.body.classList.add("loaded");
-  }
-
-  function redirectToError(message, code = "AUTH_CHECK_FAILED") {
-    if (redirecting) return;
-
-    redirecting = true;
-
-    const errorURL = new URL("error.html", document.baseURI);
-    errorURL.searchParams.set("message", message);
-    errorURL.searchParams.set("code", code);
-    errorURL.searchParams.set("from", "home");
-
-    window.location.replace(errorURL.href);
-  }
-
-  async function waitForSplash() {
-    const elapsed = Date.now() - splashStartedAt;
-    const remaining = Math.max(0, MIN_SPLASH_TIME - elapsed);
-
-    if (remaining > 0) {
-      await new Promise(resolve => setTimeout(resolve, remaining));
-    }
-  }
-
-  async function handleAuthState(user) {
-    if (authHandled || redirecting) return;
-
-    authHandled = true;
-    clearTimeout(authTimeoutId);
-
-    await waitForSplash();
-
-    if (redirecting) return;
-
-    if (user) {
-      // Already signed in: continue to the dashboard.
-      redirecting = true;
+    function goDashboard() {
+      if (redirected) return;
+      redirected = true;
       window.location.replace("dashboard.html");
-      return;
     }
 
-    // Signed out: display the public landing page.
-    showLandingPage();
-  }
+    // Hard cap: if auth hasn't resolved in 600ms, give up waiting.
+    // We don't cancel the listener — if it resolves later, we still redirect.
+    const capTimer = setTimeout(() => {
+      // Auth is slow — leave the user on the landing page.
+      // Do nothing. The listener below will still redirect if it fires.
+      clearTimeout(capTimer);
+    }, SPLASH_CAP_MS);
 
-  function initLandingInteractions() {
-    const navbar = document.getElementById("navbar");
-    const menuToggle = document.getElementById("menuToggle");
-
-    if (navbar) {
-      const updateNavbar = () => {
-        navbar.classList.toggle("scrolled", window.scrollY > 40);
-      };
-
-      updateNavbar();
-
-      window.addEventListener("scroll", updateNavbar, {
-        passive: true
-      });
-    }
-
-    if (menuToggle) {
-      menuToggle.addEventListener("click", () => {
-        const isOpen = document.body.classList.toggle("menu-open");
-
-        menuToggle.setAttribute("aria-expanded", String(isOpen));
-      });
-    }
-
-    document.querySelectorAll(".nav-link").forEach(link => {
-      link.addEventListener("click", () => {
-        document.body.classList.remove("menu-open");
-        menuToggle?.setAttribute("aria-expanded", "false");
-      });
+    onAuthStateChanged(auth, (user) => {
+      clearTimeout(capTimer);
+      if (user) goDashboard();
+      // Signed out: stay on the landing page. Nothing to do.
+    }, (error) => {
+      // Firebase unreachable — stay on landing. No user-visible error.
+      clearTimeout(capTimer);
+      console.warn("[IKLens index] Auth check failed:", error);
     });
-  }
+  </script>
 
-  // Initialize interactions even if DOMContentLoaded has already fired.
-  if (document.readyState === "loading") {
-    document.addEventListener(
-      "DOMContentLoaded",
-      initLandingInteractions,
-      { once: true }
-    );
-  } else {
-    initLandingInteractions();
-  }
+  <!-- Shared App Runtime (toasts, header helpers) -->
+  <script type="module" src="js/app.js"></script>
 
-  // Avoid leaving the splash screen visible indefinitely.
-  authTimeoutId = setTimeout(() => {
-    if (!authHandled && !redirecting) {
-      redirectToError(
-        "We couldn't verify your sign-in session. Please try again.",
-        "AUTH_TIMEOUT"
-      );
-    }
-  }, AUTH_TIMEOUT);
-
-  // Firebase determines whether the visitor is signed in.
-  try {
-    onAuthStateChanged(
-      auth,
-      handleAuthState,
-      error => {
-        console.error(
-          "[IKLens] Authentication check failed:",
-          error
-        );
-
-        clearTimeout(authTimeoutId);
-
-        redirectToError(
-          "We couldn't verify your sign-in session. Please try again.",
-          "AUTH_CHECK_FAILED"
-        );
-      }
-    );
-  } catch (error) {
-    console.error("[IKLens] Could not initialize authentication:", error);
-
-    clearTimeout(authTimeoutId);
-
-    redirectToError(
-      "IKLens could not check your sign-in session. Please try again.",
-      "AUTH_INIT_FAILED"
-    );
-  }
-</script>
 </body>
-  </html>
+</html>

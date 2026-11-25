@@ -8,8 +8,6 @@
   <link rel="icon" type="image/png" href="images/IKLens - AI Image prompting platform.png">
   <title>Create Account — IKLens</title>
 
-  <!-- Dependencies -->
-  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
 
   <style>
@@ -86,7 +84,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* LEFT COLUMN — HERO */
     .auth-visual-column {
       position: relative;
       background: #000;
@@ -136,7 +133,6 @@
       max-width: 320px;
     }
 
-    /* RIGHT COLUMN — FORM */
     .auth-form-column {
       display: flex;
       flex-direction: column;
@@ -187,7 +183,6 @@
       color: var(--auth-text-secondary);
     }
 
-    /* ERROR BOX */
     .auth-error-box {
       display: none;
       padding: 14px 16px;
@@ -216,7 +211,6 @@
       100% { transform: translateX(0); }
     }
 
-    /* STATE MANAGEMENT */
     .auth-state {
       transition: opacity var(--auth-transition), transform var(--auth-transition);
     }
@@ -239,7 +233,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* FORM */
     .auth-form {
       display: flex;
       flex-direction: column;
@@ -312,7 +305,6 @@
       border-color: rgba(239, 68, 68, 0.4);
     }
 
-    /* PASSWORD TOGGLE */
     .password-toggle-btn {
       position: absolute;
       right: 12px;
@@ -336,7 +328,34 @@
 
     .password-toggle-btn i { font-size: 1rem; }
 
-    /* SUBMIT BUTTON */
+    /* REMEMBER ME ROW */
+    .auth-utility-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.875rem;
+      margin-top: -6px;
+    }
+
+    .remember-me-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--auth-text-secondary);
+      cursor: pointer;
+      transition: color var(--auth-transition-fast);
+    }
+
+    .remember-me-label:hover { color: var(--auth-text-primary); }
+
+    .remember-checkbox {
+      accent-color: var(--auth-cyan);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
     .auth-submit-btn {
       width: 100%;
       padding: 14px;
@@ -393,7 +412,6 @@
       text-decoration-color: rgba(0, 210, 255, 0.4);
     }
 
-    /* STEP INDICATOR */
     .step-indicator {
       display: flex;
       align-items: center;
@@ -441,7 +459,6 @@
       max-width: 30px;
     }
 
-    /* STYLE PREFERENCE GRID */
     .style-hint {
       font-size: 0.78rem;
       color: var(--auth-text-muted);
@@ -528,7 +545,6 @@
       font-weight: 700;
     }
 
-    /* RESPONSIVE */
     @media (max-width: 900px) {
       .auth-container {
         grid-template-columns: 1fr;
@@ -567,7 +583,6 @@
   <div class="auth-view-wrapper">
     <div class="auth-container">
 
-      <!-- LEFT: HERO -->
       <div class="auth-visual-column">
         <img
           src="images/1783962473647.png"
@@ -582,7 +597,6 @@
         </div>
       </div>
 
-      <!-- RIGHT: FORM -->
       <div class="auth-form-column">
         <div class="auth-header">
           <a href="index.html" class="auth-brand" aria-label="IKLens Home">
@@ -597,7 +611,6 @@
           </a>
         </div>
 
-        <!-- STEP INDICATOR -->
         <div class="step-indicator" id="step-indicator">
           <div class="step active" id="step-1">
             <span class="step-number">1</span>
@@ -610,13 +623,14 @@
           </div>
         </div>
 
-        <!-- ERROR -->
         <div id="register-error" class="auth-error-box" role="alert" aria-live="polite">
           <i class="fa-solid fa-circle-exclamation"></i>
           <span id="register-error-text"></span>
         </div>
 
-        <!-- STATE 1: ACCOUNT -->
+        <!-- ============================================
+             STEP 1 — ACCOUNT
+             ============================================ -->
         <div id="signup-state" class="auth-state active-state">
           <div class="auth-header" style="margin-bottom: 20px;">
             <h1 class="auth-title">Create your account</h1>
@@ -694,6 +708,14 @@
               </div>
             </div>
 
+            <!-- REMEMBER ME -->
+            <div class="auth-utility-row">
+              <label class="remember-me-label">
+                <input type="checkbox" id="remember-me" name="remember" class="remember-checkbox" />
+                <span>Remember me</span>
+              </label>
+            </div>
+
             <button type="submit" id="register-submit-btn" class="auth-submit-btn">
               Continue <i class="fa-solid fa-arrow-right" style="margin-left: 8px; font-size: 0.9rem;"></i>
             </button>
@@ -705,7 +727,9 @@
           </p>
         </div>
 
-        <!-- STATE 2: ONBOARDING -->
+        <!-- ============================================
+             STEP 2 — ONBOARDING
+             ============================================ -->
         <div id="onboarding-state" class="auth-state hidden-state">
           <div class="auth-header" style="margin-bottom: 20px;">
             <h1 class="auth-title">Customize your profile</h1>
@@ -714,7 +738,7 @@
 
           <form id="onboarding-form" class="auth-form" novalidate>
             <div class="form-group">
-              <label for="user-gender" class="form-label">Gender Identity</label>
+              <label for="user-gender" class="form-label">Gender (optional)</label>
               <select id="user-gender" name="gender" class="form-select" aria-required="true">
                 <option value="" disabled selected>Select your gender</option>
                 <option value="male">Male</option>
@@ -725,8 +749,20 @@
             </div>
 
             <div class="form-group">
+              <label class="form-label">Get alerts for new templates in</label>
+              <p class="style-hint">Choose the categories you care about. You can change this later in your profile.</p>
+              <div class="style-grid-container" id="category-grid">
+                <div class="style-card selected" data-category="male" role="button" tabindex="0" aria-pressed="true">Male</div>
+                <div class="style-card selected" data-category="female" role="button" tabindex="0" aria-pressed="true">Female</div>
+                <div class="style-card selected" data-category="kids" role="button" tabindex="0" aria-pressed="true">Kids</div>
+                <div class="style-card selected" data-category="couple" role="button" tabindex="0" aria-pressed="true">Couples</div>
+                <div class="style-card selected" data-category="flyer" role="button" tabindex="0" aria-pressed="true">Flyers</div>
+              </div>
+            </div>
+
+            <div class="form-group">
               <label class="form-label">
-                Favorite Image Styles
+                Favorite Image Styles (optional)
                 <span class="style-counter" id="style-counter">0 / 3</span>
               </label>
               <p class="style-hint">Pick up to 3 styles that best match your creative taste.</p>
@@ -779,26 +815,30 @@
     </div>
   </div>
 
-<!-- IKLens Firebase Signup & Onboarding — RTDB ONLY -->
 <script type="module">
   import {
     createUserWithEmailAndPassword,
     updateProfile,
     setPersistence,
     browserLocalPersistence,
+    browserSessionPersistence,
     onAuthStateChanged,
     signOut
   } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
 
   import {
     ref,
-    set
+    set,
+    update
   } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
 
   import { auth, database } from "./js/firebase-config.js";
 
   (() => {
     "use strict";
+
+    /* ---------- STORAGE KEY ---------- */
+    const PENDING_KEY = "iklens_signup_pending_v1";
 
     /* ---------- DOM ---------- */
     const errorBox = document.getElementById("register-error");
@@ -811,6 +851,7 @@
     const emailInput = document.getElementById("register-email");
     const passwordInput = document.getElementById("register-password");
     const confirmPasswordInput = document.getElementById("register-confirm-password");
+    const rememberInput = document.getElementById("remember-me");
 
     const registerBtn = document.getElementById("register-submit-btn");
     const completeBtn = document.getElementById("complete-onboarding-btn");
@@ -820,15 +861,19 @@
     const styleGrid = document.getElementById("style-grid");
     const styleCounter = document.getElementById("style-counter");
 
+    const categoryGrid = document.getElementById("category-grid");
+    const followedCategories = { male: true, female: true, kids: true, couple: true, flyer: true };
+
     const originalRegisterHtml = registerBtn.innerHTML;
     const originalCompleteHtml = completeBtn.innerHTML;
 
     const MAX_STYLES = 3;
 
     /* ---------- STATE ---------- */
-    let pendingAccount = null;
+    let pendingAccount = null;      // { name, email, password, remember }
     let selectedStyles = [];
     let registrationInProgress = false;
+    let isCompletingSignup = false; // guards the auth-state redirect race
 
     /* ---------- UI HELPERS ---------- */
     function showError(message) {
@@ -885,6 +930,63 @@
         .scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
+    /* ---------- SESSION STORAGE (name + email only) ---------- */
+    function savePendingToStorage() {
+      if (!pendingAccount) return;
+      try {
+        sessionStorage.setItem(PENDING_KEY, JSON.stringify({
+          name: pendingAccount.name,
+          email: pendingAccount.email,
+          remember: !!pendingAccount.remember
+        }));
+      } catch (_) {}
+    }
+
+    function readPendingFromStorage() {
+      try {
+        const raw = sessionStorage.getItem(PENDING_KEY);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed !== "object") return null;
+        if (typeof parsed.name !== "string" || typeof parsed.email !== "string") return null;
+        if (!parsed.name.trim() || !parsed.email.trim()) return null;
+        return {
+          name: parsed.name.trim(),
+          email: parsed.email.trim(),
+          remember: !!parsed.remember
+        };
+      } catch (_) {
+        return null;
+      }
+    }
+
+    function clearPendingStorage() {
+      try { sessionStorage.removeItem(PENDING_KEY); } catch (_) {}
+    }
+
+    /* ---------- RESTORE AFTER REFRESH ---------- */
+    function restoreIfRefreshed() {
+      const saved = readPendingFromStorage();
+      if (!saved) return false;
+
+      // Repopulate Step 1 fields. Password is intentionally NOT stored,
+      // so the user must re-type it — that's the safe behavior.
+      nameInput.value = saved.name;
+      emailInput.value = saved.email;
+      rememberInput.checked = saved.remember;
+
+      // Leave them on Step 1. They'll re-enter password and continue.
+      showAccountStep();
+
+      // Hint at why they're back here.
+      showError(
+        "Welcome back — your name and email are restored. Please re-enter your password to continue."
+      );
+
+      return true;
+    }
+
+    /* ---------- FRIENDLY ERRORS ---------- */
     function friendlyMessage(error) {
       const messages = {
         "auth/email-already-in-use":
@@ -907,7 +1009,7 @@
         "We could not complete registration. Please try again.";
     }
 
-    /* ---------- APPROACH 3: waitForAuthUser ---------- */
+    /* ---------- WAIT FOR AUTH TOKEN ---------- */
     function waitForAuthUser(uid, timeoutMs = 8000) {
       return new Promise((resolve, reject) => {
         const timeout = setTimeout(() => {
@@ -925,7 +1027,7 @@
       });
     }
 
-    /* ---------- APPROACH 3: writeWithRetry ---------- */
+    /* ---------- WRITE WITH RETRY ---------- */
     async function writeWithRetry(path, data, maxAttempts = 5) {
       let lastError;
 
@@ -947,7 +1049,6 @@
 
           if (!isRetryable) throw error;
 
-          // Back off: 300ms, 600ms, 900ms, 1200ms...
           await new Promise(r => setTimeout(r, 300 * attempt));
         }
       }
@@ -992,6 +1093,7 @@
       const email = emailInput.value.trim().toLowerCase();
       const password = passwordInput.value;
       const confirmPassword = confirmPasswordInput.value;
+      const remember = !!rememberInput.checked;
 
       if (name.length < 2) {
         showError("Please enter your full name.");
@@ -1017,7 +1119,8 @@
         return;
       }
 
-      pendingAccount = { name, email, password };
+      pendingAccount = { name, email, password, remember };
+      savePendingToStorage();
       transitionToOnboarding();
     });
 
@@ -1050,6 +1153,24 @@
       hideError();
     });
 
+    /* ---------- CATEGORY ALERT CHIPS ---------- */
+    function toggleCategory(chip) {
+      const key = chip.dataset.category;
+      if (!key || !(key in followedCategories)) return;
+      followedCategories[key] = !followedCategories[key];
+      chip.classList.toggle("selected", followedCategories[key]);
+      chip.setAttribute("aria-pressed", String(followedCategories[key]));
+    }
+    categoryGrid.addEventListener("click", event => {
+      const chip = event.target.closest("[data-category]");
+      if (chip) toggleCategory(chip);
+    });
+    categoryGrid.addEventListener("keydown", event => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      const chip = event.target.closest("[data-category]");
+      if (chip) { event.preventDefault(); toggleCategory(chip); }
+    });
+
     /* ---------- STEP 2: CREATE + WRITE ---------- */
     onboardingForm.addEventListener("submit", async event => {
       event.preventDefault();
@@ -1063,20 +1184,10 @@
         return;
       }
 
-      const gender = genderSelect.value;
-
-      if (!gender) {
-        showError("Please select a gender option, or choose 'Prefer not to say'.");
-        genderSelect.focus();
-        return;
-      }
-
-      if (selectedStyles.length === 0) {
-        showError("Please select at least one preferred image style.");
-        return;
-      }
+      const gender = genderSelect.value || "prefer-not-to-say";
 
       registrationInProgress = true;
+      isCompletingSignup = true;
 
       setButtonLoading(
         completeBtn,
@@ -1090,9 +1201,14 @@
       let createdUser = null;
 
       try {
-        await setPersistence(auth, browserLocalPersistence);
+        // Honor Remember Me — identical to login.html.
+        await setPersistence(
+          auth,
+          pendingAccount.remember
+            ? browserLocalPersistence
+            : browserSessionPersistence
+        );
 
-        // 1. Create the Firebase Auth account.
         const credential = await createUserWithEmailAndPassword(
           auth,
           pendingAccount.email,
@@ -1101,15 +1217,12 @@
 
         createdUser = credential.user;
 
-        // 2. Wait for auth token to propagate (Approach 1).
         await waitForAuthUser(createdUser.uid);
 
-        // 3. Set display name.
         await updateProfile(createdUser, {
           displayName: pendingAccount.name
         });
 
-        // 4. Build profile object.
         const profile = {
           uid: createdUser.uid,
           name: pendingAccount.name,
@@ -1121,26 +1234,32 @@
           updatedAt: Date.now()
         };
 
-        // 5. Write to RTDB with retry (Approach 2).
         await writeWithRetry(
           `users/${createdUser.uid}/profile`,
           profile
         );
 
-        // 6. Clear sensitive state.
+        // Saved separately so a database-rules problem here can never block signup.
+        try {
+          await update(ref(database, `users/${createdUser.uid}/profile`), {
+            followedCategories: { ...followedCategories }
+          });
+        } catch (err) {
+          console.warn("[Signup] Could not save category alerts:", err);
+        }
+
+        // Clean up sensitive state
         pendingAccount = null;
         selectedStyles = [];
         passwordInput.value = "";
         confirmPasswordInput.value = "";
+        clearPendingStorage();
 
-        // 7. Go to dashboard.
         window.location.replace("dashboard.html");
 
       } catch (error) {
         console.error("IKLens registration error:", error);
 
-        // If Firebase Auth account was created but profile write failed,
-        // sign out so the user isn't stuck in a half-created state.
         if (createdUser) {
           try { await signOut(auth); } catch (_) {}
         }
@@ -1154,6 +1273,7 @@
         }
 
         registrationInProgress = false;
+        isCompletingSignup = false;
         registerBtn.disabled = false;
 
         setButtonLoading(
@@ -1165,20 +1285,33 @@
       }
     });
 
-    /* ---------- CLEANUP ---------- */
-    window.addEventListener("pagehide", () => {
-      pendingAccount = null;
+    /* ---------- CLEANUP ON LEAVE ---------- */
+    // Clear sessionStorage when the user navigates away from signup
+    // (browser back, clicking a link) — NOT on refresh (that's the point).
+    // pagehide fires on both, but `event.persisted` tells us if the page
+    // is going into the back/forward cache (refresh-like) or being unloaded.
+    window.addEventListener("pagehide", (event) => {
+      if (!event.persisted) {
+        clearPendingStorage();
+      }
     });
 
     /* ---------- REDIRECT IF ALREADY SIGNED IN ---------- */
     onAuthStateChanged(auth, user => {
-      if (user && window.location.pathname.endsWith("signup.html")) {
-        // Only auto-redirect if we're not mid-signup.
-        if (!registrationInProgress && !pendingAccount) {
-          window.location.replace("dashboard.html");
-        }
+      if (
+        user &&
+        !isCompletingSignup &&
+        !registrationInProgress &&
+        !pendingAccount &&
+        window.location.pathname.endsWith("signup.html")
+      ) {
+        window.location.replace("dashboard.html");
       }
     });
+
+    /* ---------- BOOT ---------- */
+    // If the user refreshed mid-flow, restore Step 1 data and show the hint.
+    restoreIfRefreshed();
 
   })();
 </script>
